@@ -5,75 +5,824 @@ Máquinas
 {% endblock %}
 
 {% block content %}
-<div id="documents-wrapper" style="opacity: 0;">
-    <div class="documents-container">
+<style>
+  .highlight {
+    background-color: #ffd700;
+    color: #000;
+    padding: 0 2px;
+    border-radius: 3px;
+  }
+  .dropdown {
+    display: inline-block;
+    position: relative;
+  }
+  .dropdown-options {
+    position: absolute;
+    top: 110%;
+    left: 0;
+    background: rgba(0,0,0,0.9);
+    border: 1px solid #fff;
+    border-radius: 5px;
+    z-index: 100;
+    min-width: 150px;
+  }
+  .dropdown-options button,
+  .dropdown-options label {
+    width: 100%;
+    border: none;
+    background: transparent;
+    padding: 8px;
+    color: #fff;
+    text-align: left;
+    cursor: pointer;
+    display: block;
+  }
+  .dropdown-options button:hover,
+  .dropdown-options label:hover {
+    background: rgba(255,255,255,0.1);
+  }
+  button {
+    background: transparent;
+    border: 1px solid #fff;
+    color: #fff;
+    border-radius: 5px;
+    cursor: pointer;
+  }
+  button:hover {
+    background: rgba(255,255,255,0.2);
+  }
+  .edit-input {
+    width: 100%;
+    box-sizing: border-box;
+    padding: 2px 4px;
+  }
+  @media print {
+    body * {
+      visibility: hidden;
+    }
+    #printArea, #printArea * {
+      visibility: visible;
+    }
+    #printArea {
+      position: absolute;
+      left: 0;
+      top: 0;
+      width: 100%;
+    }
+  }
+</style>
 
-        <!-- Título principal -->
-        <h1 class="documents-main-title glow-text">Máquinas</h1>
-        <hr class="documents-separator">
+<div id="documents-wrapper" style="opacity: 0;" v-cloak>
+  <div class="documents-container">
 
-        <!-- Segundo título -->
-        <h2 class="documents-subtitle glow-text">Máquinas</h2>
+    <!-- Título principal -->
+    <h1 class="documents-main-title glow-text">Máquinas</h1>
+    <hr class="documents-separator">
 
-        <!-- Barra de búsqueda (idéntica a parameters.html, sin ícono) -->
-        <div style="
-            display: flex;
-            justify-content: flex-start;
-            align-items: center;
-            gap: 15px;
-            margin-bottom: 40px;
-        ">
-            <span class="glow-text" style="font-size: 1.2rem;">Buscar</span>
-            <input 
-                type="text" 
-                placeholder="" 
-                style="
-                    width: 220px;
-                    padding: 8px 10px;
-                    border: 2px solid #fff;
-                    border-radius: 20px;
-                    background: transparent;
-                    color: #fff;
-                    outline: none;
-                    font-size: 1rem;
-                "
-            >
-        </div>
+    <!-- Segundo título -->
+    <h2 class="documents-subtitle glow-text">Máquinas</h2>
 
-        <!-- Tabla con bordes visibles -->
-        <div style="overflow-x: auto;">
-            <table style="width:100%; border-collapse: collapse;">
-                <thead>
-                    <tr>
-                        <th class="glow-text" style="border: 1px solid #fff; padding: 10px; text-align: left;">Línea</th>
-                        <th class="glow-text" style="border: 1px solid #fff; padding: 10px; text-align: left;">Modelo</th>
-                        <th class="glow-text" style="border: 1px solid #fff; padding: 10px; text-align: left;">Marca</th>
-                        <th class="glow-text" style="border: 1px solid #fff; padding: 10px; text-align: left;">No. de serie</th>
-                        <th class="glow-text" style="border: 1px solid #fff; padding: 10px; text-align: left;">Tipo</th>
-                        <th class="glow-text" style="border: 1px solid #fff; padding: 10px; text-align: left;">Comentarios</th>
-                    </tr>
-                </thead>
-                <tbody>
-                    <tr>
-                        <td class="glow-text" style="border: 1px solid #fff; padding: 10px;">L1</td>
-                        <td class="glow-text" style="border: 1px solid #fff; padding: 10px;">Modelo X</td>
-                        <td class="glow-text" style="border: 1px solid #fff; padding: 10px;">Marca Y</td>
-                        <td class="glow-text" style="border: 1px solid #fff; padding: 10px;">12345</td>
-                        <td class="glow-text" style="border: 1px solid #fff; padding: 10px;">Cortadora</td>
-                        <td class="glow-text" style="border: 1px solid #fff; padding: 10px;">Sin comentarios</td>
-                    </tr>
-                    <!-- Agrega más filas según sea necesario -->
-                </tbody>
-            </table>
-        </div>
-
+    <!-- Barra de búsqueda global (igual al ejemplo proporcionado) -->
+    <div style="
+      display: flex; 
+      justify-content: flex-start; 
+      align-items: center; 
+      gap: 15px; 
+      margin-bottom: 40px;
+    ">
+      <span class="glow-text" style="font-size: 1.2rem;">Buscar</span>
+      <input 
+        type="text" 
+        v-model="globalSearch" 
+        placeholder="Busqueda Global..." 
+        style="
+          width: 220px;
+          padding: 8px 10px;
+          border: 2px solid #fff;
+          border-radius: 20px;
+          background: transparent;
+          color: #fff;
+          outline: none;
+          font-size: 1rem;
+        "
+      >
     </div>
+
+    <!-- FILA PRINCIPAL: Botones a la izquierda y gráfica a la derecha -->
+    <div 
+      style="
+        display: flex; 
+        justify-content: space-between; 
+        align-items: flex-start; 
+        margin-bottom: 20px;
+      "
+    >
+      <!-- Contenedor de botones (Resetear, Imprimir, Exportar, Mostrar/Ocultar Columnas) -->
+      <div style="display: flex; align-items: center; gap: 10px;">
+        <!-- Botón Resetear con dropdown -->
+        <div class="dropdown">
+          <button @click="toggleResetDropdown" style="padding: 8px 12px;">Resetear</button>
+          <div v-if="showResetDropdown" class="dropdown-options">
+            <button @click="resetFilters">Filtros</button>
+            <button @click="resetColumns">Columnas</button>
+            <button @click="resetTodo">Todo</button>
+          </div>
+        </div>
+
+        <!-- Botón Imprimir con dropdown -->
+        <div class="dropdown">
+          <button @click="togglePrintDropdown" style="padding: 8px 12px;">Imprimir</button>
+          <div v-if="showPrintDropdown" class="dropdown-options">
+            <button @click="printAll">Todo</button>
+            <button @click="printFiltered">Aplicando filtros actuales</button>
+          </div>
+        </div>
+
+        <!-- Botones de exportación -->
+        <button @click="exportCSV" style="padding: 8px 12px;">Exportar CSV</button>
+        <button @click="exportJSON" style="padding: 8px 12px;">Exportar JSON</button>
+
+        <!-- Botón "Mostrar/Ocultar Columnas" con dropdown -->
+        <div class="dropdown">
+          <button @click="toggleColumnToggles" style="padding: 8px 12px;">Mostrar/Ocultar Columnas</button>
+          <div v-if="showColumnToggles" class="dropdown-options">
+            <label>
+              <input type="checkbox" v-model="visibleLine"> Línea
+            </label>
+            <label>
+              <input type="checkbox" v-model="visibleModel"> Modelo
+            </label>
+            <label>
+              <input type="checkbox" v-model="visibleBrand"> Marca
+            </label>
+            <label>
+              <input type="checkbox" v-model="visibleSerial"> No. de serie
+            </label>
+            <label>
+              <input type="checkbox" v-model="visibleType"> Tipo
+            </label>
+            <label>
+              <input type="checkbox" v-model="visibleComments"> Comentarios
+            </label>
+          </div>
+        </div>
+      </div>
+
+      <!-- Gráfica a la derecha (400x200) -->
+      <div>
+        <canvas id="chartCanvas" width="400" height="200"></canvas>
+      </div>
+    </div>
+
+    <!-- Filtros aplicados y mostrados. Debajo: Mostrando # de #, Filas por página -->
+    <div style="text-align: center; margin-bottom: 20px;">
+      <div class="glow-text" style="margin-bottom:5px;">
+        Filtros aplicados: [[ appliedFilters ]]
+      </div>
+      <div style="display: inline-block; margin-right: 10px;" class="glow-text">
+        Mostrando [[ filteredMachines.length ]] de [[ machines.length ]] registros.
+      </div>
+      <div style="display: inline-block;">
+        Filas por página:
+        <select 
+          v-model="pageSize" 
+          style="
+            padding: 5px; 
+            border-radius: 5px; 
+            border: 1px solid #fff; 
+            background: transparent; 
+            color: #fff;
+          "
+        >
+          <option value="5">5</option>
+          <option value="10">10</option>
+          <option value="20">20</option>
+          <option value="50">50</option>
+        </select>
+      </div>
+    </div>
+
+    <!-- Sección imprimible (tabla con edición en línea) -->
+    <div id="printArea" style="overflow-x: auto;">
+      <table style="width:100%; border-collapse: collapse;">
+        <thead>
+          <tr>
+            <th 
+              v-if="visibleLine" 
+              class="glow-text" 
+              style="border: 1px solid #fff; padding: 10px; text-align: left; cursor: pointer;" 
+              @click="sortBy('line')"
+            >
+              Línea <span v-if="sortKey==='line'">[[ sortOrder=='asc' ? '▲' : '▼' ]]</span>
+            </th>
+            <th 
+              v-if="visibleModel" 
+              class="glow-text" 
+              style="border: 1px solid #fff; padding: 10px; text-align: left; cursor: pointer;" 
+              @click="sortBy('model')"
+            >
+              Modelo <span v-if="sortKey==='model'">[[ sortOrder=='asc' ? '▲' : '▼' ]]</span>
+            </th>
+            <th 
+              v-if="visibleBrand" 
+              class="glow-text" 
+              style="border: 1px solid #fff; padding: 10px; text-align: left; cursor: pointer;" 
+              @click="sortBy('brand')"
+            >
+              Marca <span v-if="sortKey==='brand'">[[ sortOrder=='asc' ? '▲' : '▼' ]]</span>
+            </th>
+            <th 
+              v-if="visibleSerial" 
+              class="glow-text" 
+              style="border: 1px solid #fff; padding: 10px; text-align: left; cursor: pointer;" 
+              @click="sortBy('serial')"
+            >
+              No. de serie <span v-if="sortKey==='serial'">[[ sortOrder=='asc' ? '▲' : '▼' ]]</span>
+            </th>
+            <th 
+              v-if="visibleType" 
+              class="glow-text" 
+              style="border: 1px solid #fff; padding: 10px; text-align: left; cursor: pointer;" 
+              @click="sortBy('type')"
+            >
+              Tipo <span v-if="sortKey==='type'">[[ sortOrder=='asc' ? '▲' : '▼' ]]</span>
+            </th>
+            <th 
+              v-if="visibleComments" 
+              class="glow-text" 
+              style="border: 1px solid #fff; padding: 10px; text-align: left; cursor: pointer;" 
+              @click="sortBy('comments')"
+            >
+              Comentarios <span v-if="sortKey==='comments'">[[ sortOrder=='asc' ? '▲' : '▼' ]]</span>
+            </th>
+          </tr>
+          <tr>
+            <th v-if="visibleLine" style="border: 1px solid #fff; padding: 5px;">
+              <input 
+                type="text" 
+                v-model="filterLine" 
+                placeholder="Filtrar..." 
+                style="width: 95%; padding: 5px; border-radius: 5px; border: 1px solid #fff; background: transparent; color: #fff;"
+              >
+            </th>
+            <th v-if="visibleModel" style="border: 1px solid #fff; padding: 5px;">
+              <input 
+                type="text" 
+                v-model="filterModel" 
+                placeholder="Filtrar..." 
+                style="width: 95%; padding: 5px; border-radius: 5px; border: 1px solid #fff; background: transparent; color: #fff;"
+              >
+            </th>
+            <th v-if="visibleBrand" style="border: 1px solid #fff; padding: 5px;">
+              <input 
+                type="text" 
+                v-model="filterBrand" 
+                placeholder="Filtrar..." 
+                style="width: 95%; padding: 5px; border-radius: 5px; border: 1px solid #fff; background: transparent; color: #fff;"
+              >
+            </th>
+            <th v-if="visibleSerial" style="border: 1px solid #fff; padding: 5px;">
+              <input 
+                type="text" 
+                v-model="filterSerial" 
+                placeholder="Filtrar..." 
+                style="width: 95%; padding: 5px; border-radius: 5px; border: 1px solid #fff; background: transparent; color: #fff;"
+              >
+            </th>
+            <th v-if="visibleType" style="border: 1px solid #fff; padding: 5px;">
+              <select 
+                v-model="filterType" 
+                style="width: 100%; padding: 5px; border-radius: 5px; border: 1px solid #fff; background: transparent; color: #fff;"
+              >
+                <option value="">Todos</option>
+                <option value="Cortadora">Cortadora</option>
+                <option value="Empacadora">Empacadora</option>
+                <option value="Selladora">Selladora</option>
+                <option value="Impresora">Impresora</option>
+              </select>
+            </th>
+            <th v-if="visibleComments" style="border: 1px solid #fff; padding: 5px;">
+              <input 
+                type="text" 
+                v-model="filterComments" 
+                placeholder="Filtrar..." 
+                style="width: 95%; padding: 5px; border-radius: 5px; border: 1px solid #fff; background: transparent; color: #fff;"
+              >
+            </th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr 
+            v-for="machine in paginatedMachines" 
+            :key="machine.serial"
+            :title="machine.line + ' ' + machine.model + ' ' + machine.brand + ' ' + machine.serial + ' ' + machine.type + ' ' + machine.comments"
+          >
+            <!-- Edición en línea al hacer doble clic -->
+            <td 
+              v-if="visibleLine" 
+              style="border: 1px solid #fff; padding: 10px;" 
+              @dblclick="editCell('line', machine)"
+            >
+              <template v-if="!isEditingCell(machine, 'line')">
+                <span v-html="highlight(machine.line, filterLine)"></span>
+              </template>
+              <template v-else>
+                <input 
+                  type="text" 
+                  v-model="editingCell.value" 
+                  class="edit-input" 
+                  @blur="saveCellEdit(machine, 'line')" 
+                  @keyup.enter="saveCellEdit(machine, 'line')"
+                />
+              </template>
+            </td>
+            <td 
+              v-if="visibleModel" 
+              style="border: 1px solid #fff; padding: 10px;" 
+              @dblclick="editCell('model', machine)"
+            >
+              <template v-if="!isEditingCell(machine, 'model')">
+                <span v-html="highlight(machine.model, filterModel)"></span>
+              </template>
+              <template v-else>
+                <input 
+                  type="text" 
+                  v-model="editingCell.value" 
+                  class="edit-input" 
+                  @blur="saveCellEdit(machine, 'model')" 
+                  @keyup.enter="saveCellEdit(machine, 'model')"
+                />
+              </template>
+            </td>
+            <td 
+              v-if="visibleBrand" 
+              style="border: 1px solid #fff; padding: 10px;" 
+              @dblclick="editCell('brand', machine)"
+            >
+              <template v-if="!isEditingCell(machine, 'brand')">
+                <span v-html="highlight(machine.brand, filterBrand)"></span>
+              </template>
+              <template v-else>
+                <input 
+                  type="text" 
+                  v-model="editingCell.value" 
+                  class="edit-input" 
+                  @blur="saveCellEdit(machine, 'brand')" 
+                  @keyup.enter="saveCellEdit(machine, 'brand')"
+                />
+              </template>
+            </td>
+            <td 
+              v-if="visibleSerial" 
+              style="border: 1px solid #fff; padding: 10px;" 
+              @dblclick="editCell('serial', machine)"
+            >
+              <template v-if="!isEditingCell(machine, 'serial')">
+                <span v-html="highlight(machine.serial, filterSerial)"></span>
+              </template>
+              <template v-else>
+                <input 
+                  type="text" 
+                  v-model="editingCell.value" 
+                  class="edit-input" 
+                  @blur="saveCellEdit(machine, 'serial')" 
+                  @keyup.enter="saveCellEdit(machine, 'serial')"
+                />
+              </template>
+            </td>
+            <td 
+              v-if="visibleType" 
+              style="border: 1px solid #fff; padding: 10px;" 
+              @dblclick="editCell('type', machine)"
+            >
+              <template v-if="!isEditingCell(machine, 'type')">
+                <span v-html="highlight(machine.type, filterType)"></span>
+              </template>
+              <template v-else>
+                <input 
+                  type="text" 
+                  v-model="editingCell.value" 
+                  class="edit-input" 
+                  @blur="saveCellEdit(machine, 'type')" 
+                  @keyup.enter="saveCellEdit(machine, 'type')"
+                />
+              </template>
+            </td>
+            <td 
+              v-if="visibleComments" 
+              style="border: 1px solid #fff; padding: 10px;" 
+              @dblclick="editCell('comments', machine)"
+            >
+              <template v-if="!isEditingCell(machine, 'comments')">
+                <span v-html="highlight(machine.comments, filterComments)"></span>
+              </template>
+              <template v-else>
+                <input 
+                  type="text" 
+                  v-model="editingCell.value" 
+                  class="edit-input" 
+                  @blur="saveCellEdit(machine, 'comments')" 
+                  @keyup.enter="saveCellEdit(machine, 'comments')"
+                />
+              </template>
+            </td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+
+    <!-- Controles de paginación -->
+    <div style="margin-top: 20px; text-align: center; color: #fff;">
+      <button 
+        @click="prevPage" 
+        :disabled="currentPage === 1" 
+        style="padding: 8px 12px; margin-right: 10px;"
+      >
+        Anterior
+      </button>
+      Página [[ currentPage ]] de [[ totalPages ]]
+      <button 
+        @click="nextPage" 
+        :disabled="currentPage === totalPages" 
+        style="padding: 8px 12px; margin-left: 10px;"
+      >
+        Siguiente
+      </button>
+    </div>
+
+  </div>
 </div>
 
+<!-- Librerías Vue.js y Chart.js -->
+<script src="https://cdn.jsdelivr.net/npm/vue@2/dist/vue.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
 <script>
-    window.addEventListener('load', function(){
-        document.getElementById('documents-wrapper').classList.add('fade-in-fast');
-        document.getElementById('main-header-wrapper').style.display = 'block';
+  window.addEventListener('load', function(){
+    document.getElementById('documents-wrapper').classList.add('fade-in-fast');
+    document.getElementById('main-header-wrapper').style.display = 'block';
+    
+    new Vue({
+      el: '#documents-wrapper',
+      delimiters: ['[[', ']]'],
+      data: {
+        globalSearch: '',
+        filterLine: '',
+        filterModel: '',
+        filterBrand: '',
+        filterSerial: '',
+        filterType: '',
+        filterComments: '',
+        sortKey: '',
+        sortOrder: 'asc',
+        currentPage: 1,
+        pageSize: 10,
+        showResetDropdown: false,
+        showPrintDropdown: false,
+        showColumnToggles: false,
+        visibleLine: true,
+        visibleModel: true,
+        visibleBrand: true,
+        visibleSerial: true,
+        visibleType: true,
+        visibleComments: true,
+        editingCell: null,
+        machines: [
+          { line: 'L1', model: 'Modelo X', brand: 'Marca Y', serial: '12345', type: 'Cortadora', comments: 'Sin comentarios' },
+          { line: 'L1', model: 'Modelo A', brand: 'Marca Z', serial: '67890', type: 'Empacadora', comments: 'Operativa' },
+          { line: 'L2', model: 'Modelo B', brand: 'Marca X', serial: '54321', type: 'Selladora', comments: 'En mantenimiento' },
+          { line: 'L2', model: 'Modelo C', brand: 'Marca W', serial: '98765', type: 'Impresora', comments: 'Sin comentarios' },
+          { line: 'L3', model: 'Modelo D', brand: 'Marca V', serial: '11223', type: 'Cortadora', comments: 'Operativa' },
+          { line: 'L3', model: 'Modelo E', brand: 'Marca U', serial: '44556', type: 'Empacadora', comments: 'Operativa' },
+          { line: 'L4', model: 'Modelo F', brand: 'Marca T', serial: '77889', type: 'Selladora', comments: 'En mantenimiento' },
+          { line: 'L4', model: 'Modelo G', brand: 'Marca S', serial: '99001', type: 'Cortadora', comments: 'Sin comentarios' },
+          { line: 'L5', model: 'Modelo H', brand: 'Marca R', serial: '22334', type: 'Empacadora', comments: 'Operativa' },
+          { line: 'L5', model: 'Modelo I', brand: 'Marca Q', serial: '55667', type: 'Selladora', comments: 'Sin comentarios' },
+          { line: 'L6', model: 'Modelo J', brand: 'Marca P', serial: '88990', type: 'Cortadora', comments: 'Operativa' },
+          { line: 'L6', model: 'Modelo K', brand: 'Marca O', serial: '33445', type: 'Empacadora', comments: 'En mantenimiento' },
+          { line: 'L1', model: 'Modelo L', brand: 'Marca N', serial: '66778', type: 'Selladora', comments: 'Operativa' },
+          { line: 'L2', model: 'Modelo M', brand: 'Marca M', serial: '99002', type: 'Cortadora', comments: 'Sin comentarios' },
+          { line: 'L3', model: 'Modelo N', brand: 'Marca L', serial: '11224', type: 'Empacadora', comments: 'Operativa' },
+          { line: 'L4', model: 'Modelo O', brand: 'Marca K', serial: '22345', type: 'Selladora', comments: 'En mantenimiento' },
+          { line: 'L5', model: 'Modelo P', brand: 'Marca J', serial: '33456', type: 'Cortadora', comments: 'Operativa' },
+          { line: 'L6', model: 'Modelo Q', brand: 'Marca I', serial: '44567', type: 'Empacadora', comments: 'Sin comentarios' },
+          { line: 'L1', model: 'Modelo R', brand: 'Marca H', serial: '55678', type: 'Selladora', comments: 'Operativa' },
+          { line: 'L2', model: 'Modelo S', brand: 'Marca G', serial: '66789', type: 'Cortadora', comments: 'En mantenimiento' },
+          { line: 'L3', model: 'Modelo T', brand: 'Marca F', serial: '77890', type: 'Empacadora', comments: 'Operativa' },
+          { line: 'L4', model: 'Modelo U', brand: 'Marca E', serial: '88901', type: 'Selladora', comments: 'Sin comentarios' },
+          { line: 'L5', model: 'Modelo V', brand: 'Marca D', serial: '99012', type: 'Cortadora', comments: 'Operativa' },
+          { line: 'L6', model: 'Modelo W', brand: 'Marca C', serial: '10123', type: 'Empacadora', comments: 'En mantenimiento' },
+          { line: 'L1', model: 'Modelo X2', brand: 'Marca B', serial: '11234', type: 'Selladora', comments: 'Operativa' }
+        ],
+        chart: null
+      },
+      computed: {
+        filteredMachines() {
+          return this.machines.filter(machine => {
+            const matchLine = machine.line.toLowerCase().includes(this.filterLine.toLowerCase());
+            const matchModel = machine.model.toLowerCase().includes(this.filterModel.toLowerCase());
+            const matchBrand = machine.brand.toLowerCase().includes(this.filterBrand.toLowerCase());
+            const matchSerial = machine.serial.toLowerCase().includes(this.filterSerial.toLowerCase());
+            const matchType = this.filterType ? machine.type === this.filterType : true;
+            const matchComments = machine.comments.toLowerCase().includes(this.filterComments.toLowerCase());
+            const globalMatch = this.globalSearch ? (
+              machine.line.toLowerCase().includes(this.globalSearch.toLowerCase()) ||
+              machine.model.toLowerCase().includes(this.globalSearch.toLowerCase()) ||
+              machine.brand.toLowerCase().includes(this.globalSearch.toLowerCase()) ||
+              machine.serial.toLowerCase().includes(this.globalSearch.toLowerCase()) ||
+              machine.type.toLowerCase().includes(this.globalSearch.toLowerCase()) ||
+              machine.comments.toLowerCase().includes(this.globalSearch.toLowerCase())
+            ) : true;
+            return matchLine && matchModel && matchBrand && matchSerial && matchType && matchComments && globalMatch;
+          });
+        },
+        sortedMachines() {
+          if (!this.sortKey) return this.filteredMachines;
+          return this.filteredMachines.slice().sort((a, b) => {
+            let result = 0;
+            if (a[this.sortKey] < b[this.sortKey]) result = -1;
+            if (a[this.sortKey] > b[this.sortKey]) result = 1;
+            return this.sortOrder === 'asc' ? result : -result;
+          });
+        },
+        totalPages() {
+          return Math.ceil(this.sortedMachines.length / this.pageSize);
+        },
+        paginatedMachines() {
+          const start = (this.currentPage - 1) * this.pageSize;
+          return this.sortedMachines.slice(start, start + this.pageSize);
+        },
+        appliedFilters() {
+          let filters = [];
+          if (this.globalSearch) filters.push(`Global: "${this.globalSearch}"`);
+          if (this.filterLine) filters.push(`Línea: "${this.filterLine}"`);
+          if (this.filterModel) filters.push(`Modelo: "${this.filterModel}"`);
+          if (this.filterBrand) filters.push(`Marca: "${this.filterBrand}"`);
+          if (this.filterSerial) filters.push(`No. de serie: "${this.filterSerial}"`);
+          if (this.filterType) filters.push(`Tipo: "${this.filterType}"`);
+          if (this.filterComments) filters.push(`Comentarios: "${this.filterComments}"`);
+          return filters.length ? filters.join(', ') : 'Ninguno';
+        }
+      },
+      methods: {
+        sortBy(key) {
+          if (this.sortKey === key) {
+            this.sortOrder = this.sortOrder === 'asc' ? 'desc' : 'asc';
+          } else {
+            this.sortKey = key;
+            this.sortOrder = 'asc';
+          }
+          this.currentPage = 1;
+          this.saveConfig();
+        },
+        nextPage() {
+          if (this.currentPage < this.totalPages) this.currentPage++;
+        },
+        prevPage() {
+          if (this.currentPage > 1) this.currentPage--;
+        },
+        editCell(field, machine) {
+          this.editingCell = { id: machine.serial, field: field, value: machine[field] };
+        },
+        isEditingCell(machine, field) {
+          return this.editingCell && this.editingCell.id === machine.serial && this.editingCell.field === field;
+        },
+        saveCellEdit(machine, field) {
+          if (this.editingCell) {
+            machine[field] = this.editingCell.value;
+            this.editingCell = null;
+            this.saveConfig();
+            this.updateChart();
+          }
+        },
+        toggleResetDropdown() {
+          this.showResetDropdown = !this.showResetDropdown;
+          this.showPrintDropdown = false;
+          this.showColumnToggles = false;
+        },
+        togglePrintDropdown() {
+          this.showPrintDropdown = !this.showPrintDropdown;
+          this.showResetDropdown = false;
+          this.showColumnToggles = false;
+        },
+        toggleColumnToggles() {
+          this.showColumnToggles = !this.showColumnToggles;
+          this.showResetDropdown = false;
+          this.showPrintDropdown = false;
+        },
+        resetFilters() {
+          this.filterLine = '';
+          this.filterModel = '';
+          this.filterBrand = '';
+          this.filterSerial = '';
+          this.filterType = '';
+          this.filterComments = '';
+          this.globalSearch = '';
+          this.currentPage = 1;
+          this.showResetDropdown = false;
+          this.saveConfig();
+        },
+        resetColumns() {
+          this.visibleLine = true;
+          this.visibleModel = true;
+          this.visibleBrand = true;
+          this.visibleSerial = true;
+          this.visibleType = true;
+          this.visibleComments = true;
+          this.showResetDropdown = false;
+          this.saveConfig();
+        },
+        resetTodo() {
+          this.resetFilters();
+          this.resetColumns();
+          this.showResetDropdown = false;
+          this.saveConfig();
+        },
+        exportCSV() {
+          const headers = ['Línea', 'Modelo', 'Marca', 'No. de serie', 'Tipo', 'Comentarios'];
+          const rows = this.filteredMachines.map(machine => [
+            machine.line, machine.model, machine.brand, machine.serial, machine.type, machine.comments
+          ]);
+          let csvContent = headers.join(",") + "\n";
+          rows.forEach(row => {
+            csvContent += row.join(",") + "\n";
+          });
+          const blob = new Blob([csvContent], { type: 'text/csv;charset=utf-8;' });
+          const url = URL.createObjectURL(blob);
+          const link = document.createElement("a");
+          link.setAttribute("href", url);
+          link.setAttribute("download", "maquinas.csv");
+          document.body.appendChild(link);
+          link.click();
+          document.body.removeChild(link);
+        },
+        exportJSON() {
+          const jsonContent = JSON.stringify(this.filteredMachines, null, 2);
+          const blob = new Blob([jsonContent], { type: 'application/json;charset=utf-8;' });
+          const url = URL.createObjectURL(blob);
+          const link = document.createElement("a");
+          link.setAttribute("href", url);
+          link.setAttribute("download", "maquinas.json");
+          document.body.appendChild(link);
+          link.click();
+          document.body.removeChild(link);
+        },
+        printAll() {
+          this.printContent(this.machines);
+          this.showPrintDropdown = false;
+        },
+        printFiltered() {
+          this.printContent(this.filteredMachines);
+          this.showPrintDropdown = false;
+        },
+        printContent(dataArray) {
+          let headers = ['Línea', 'Modelo', 'Marca', 'No. de serie', 'Tipo', 'Comentarios'];
+          let rows = dataArray.map(machine => `
+            <tr>
+              ${this.visibleLine ? `<td style="border:1px solid #000;padding:5px;">${machine.line}</td>` : ''}
+              ${this.visibleModel ? `<td style="border:1px solid #000;padding:5px;">${machine.model}</td>` : ''}
+              ${this.visibleBrand ? `<td style="border:1px solid #000;padding:5px;">${machine.brand}</td>` : ''}
+              ${this.visibleSerial ? `<td style="border:1px solid #000;padding:5px;">${machine.serial}</td>` : ''}
+              ${this.visibleType ? `<td style="border:1px solid #000;padding:5px;">${machine.type}</td>` : ''}
+              ${this.visibleComments ? `<td style="border:1px solid #000;padding:5px;">${machine.comments}</td>` : ''}
+            </tr>
+          `).join("");
+          let tableHTML = `
+            <h1 style="text-align:center;">Máquinas</h1>
+            <table style="width:100%; border-collapse: collapse;" border="1">
+              <thead>
+                <tr>
+                  ${this.visibleLine ? `<th style="padding:5px;">Línea</th>` : ''}
+                  ${this.visibleModel ? `<th style="padding:5px;">Modelo</th>` : ''}
+                  ${this.visibleBrand ? `<th style="padding:5px;">Marca</th>` : ''}
+                  ${this.visibleSerial ? `<th style="padding:5px;">No. de serie</th>` : ''}
+                  ${this.visibleType ? `<th style="padding:5px;">Tipo</th>` : ''}
+                  ${this.visibleComments ? `<th style="padding:5px;">Comentarios</th>` : ''}
+                </tr>
+              </thead>
+              <tbody>
+                ${rows}
+              </tbody>
+            </table>
+          `;
+          let printWindow = window.open('', '', 'height=600,width=800');
+          printWindow.document.write('<html><head><title>Imprimir Máquinas</title>');
+          printWindow.document.write('</head><body>');
+          printWindow.document.write(tableHTML);
+          printWindow.document.write('</body></html>');
+          printWindow.document.close();
+          printWindow.focus();
+          printWindow.print();
+          printWindow.close();
+        },
+        highlight(text, filter) {
+          if (!filter) return text;
+          const regex = new RegExp('('+filter+')', 'gi');
+          return text.toString().replace(regex, '<span class="highlight">$1</span>');
+        },
+        updateChart() {
+          let counts = {};
+          this.filteredMachines.forEach(machine => {
+            counts[machine.line] = (counts[machine.line] || 0) + 1;
+          });
+          this.chart.data.labels = Object.keys(counts);
+          this.chart.data.datasets[0].data = Object.values(counts);
+          this.chart.options.title.text = "Máquinas por Línea (Filtros: " + this.appliedFilters + ")";
+          this.chart.update();
+        },
+        saveConfig() {
+          const config = {
+            globalSearch: this.globalSearch,
+            filterLine: this.filterLine,
+            filterModel: this.filterModel,
+            filterBrand: this.filterBrand,
+            filterSerial: this.filterSerial,
+            filterType: this.filterType,
+            filterComments: this.filterComments,
+            sortKey: this.sortKey,
+            sortOrder: this.sortOrder,
+            visibleLine: this.visibleLine,
+            visibleModel: this.visibleModel,
+            visibleBrand: this.visibleBrand,
+            visibleSerial: this.visibleSerial,
+            visibleType: this.visibleType,
+            visibleComments: this.visibleComments,
+            pageSize: this.pageSize
+          };
+          localStorage.setItem('machineHeadingConfig', JSON.stringify(config));
+        },
+        loadConfig() {
+          let config = localStorage.getItem('machineHeadingConfig');
+          if (config) {
+            config = JSON.parse(config);
+            this.globalSearch = config.globalSearch || '';
+            this.filterLine = config.filterLine || '';
+            this.filterModel = config.filterModel || '';
+            this.filterBrand = config.filterBrand || '';
+            this.filterSerial = config.filterSerial || '';
+            this.filterType = config.filterType || '';
+            this.filterComments = config.filterComments || '';
+            this.sortKey = config.sortKey || '';
+            this.sortOrder = config.sortOrder || 'asc';
+            this.visibleLine = config.visibleLine !== undefined ? config.visibleLine : true;
+            this.visibleModel = config.visibleModel !== undefined ? config.visibleModel : true;
+            this.visibleBrand = config.visibleBrand !== undefined ? config.visibleBrand : true;
+            this.visibleSerial = config.visibleSerial !== undefined ? config.visibleSerial : true;
+            this.visibleType = config.visibleType !== undefined ? config.visibleType : true;
+            this.visibleComments = config.visibleComments !== undefined ? config.visibleComments : true;
+            this.pageSize = config.pageSize ? parseInt(config.pageSize) : 10;
+          }
+        }
+      },
+      mounted() {
+        this.loadConfig();
+        const ctx = document.getElementById('chartCanvas').getContext('2d');
+        this.chart = new Chart(ctx, {
+          type: 'bar',
+          data: {
+            labels: [],
+            datasets: [{
+              label: 'Máquinas por Línea',
+              data: [],
+              backgroundColor: 'rgba(255,255,255,0.5)',
+              borderColor: 'rgba(255,255,255,1)',
+              borderWidth: 1
+            }]
+          },
+          options: {
+            responsive: false,
+            title: {
+              display: true,
+              text: "Máquinas por Línea (Filtros: " + this.appliedFilters + ")"
+            },
+            scales: {
+              yAxes: [{
+                ticks: { beginAtZero: true }
+              }]
+            }
+          }
+        });
+        this.updateChart();
+      },
+      watch: {
+        globalSearch: 'saveConfig',
+        filterLine(val) { this.saveConfig(); this.currentPage = 1; },
+        filterModel(val) { this.saveConfig(); this.currentPage = 1; },
+        filterBrand(val) { this.saveConfig(); this.currentPage = 1; },
+        filterSerial(val) { this.saveConfig(); this.currentPage = 1; },
+        filterType(val) { this.saveConfig(); this.currentPage = 1; },
+        filterComments(val) { this.saveConfig(); this.currentPage = 1; },
+        sortKey: 'saveConfig',
+        sortOrder: 'saveConfig',
+        visibleLine: 'saveConfig',
+        visibleModel: 'saveConfig',
+        visibleBrand: 'saveConfig',
+        visibleSerial: 'saveConfig',
+        visibleType: 'saveConfig',
+        visibleComments: 'saveConfig',
+        pageSize(val) { this.saveConfig(); this.currentPage = 1; },
+        filteredMachines() { this.updateChart(); }
+      }
     });
+  });
 </script>
 {% endblock %}
