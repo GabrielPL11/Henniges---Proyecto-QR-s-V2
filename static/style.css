@@ -131,8 +131,8 @@
     background: #000000;
     color: #FFFFFF;
     border: 2px solid #FFFFFF;
-    font-size: 1.8rem;
-    padding: 18px 80px;
+    font-size: 1.4rem;      /* Ajustado para hacerlos más pequeños (antes 1.8rem) */
+    padding: 12px 50px;     /* Ajustado para reducir el padding (antes 18px 80px) */
     border-radius: 8px;
     text-align: center;
     cursor: pointer;
@@ -165,7 +165,7 @@
    [Líneas 108-117] ESTILOS PARA LA IMAGEN "plano.png" CON DEGRADADO EN LOS 4 LADOS
    ====================================================================== */
 .plano-image {
-    width: 1100px;
+    width: 800px;  /* Ajustado para reducir el tamaño (antes 1100px) */
     height: auto;
     -webkit-mask-image: radial-gradient(
         circle at center,
@@ -189,7 +189,7 @@
 }
 
 .qr1-image {
-    width: 45px;
+    width: 30px;  /* Ajustado para hacerlo más pequeño (antes 45px) */
     height: auto;
     transition: transform 0.2s;
 }
@@ -204,7 +204,7 @@
     left: 0;
     display: none;
     color: #FFFFFF;
-    font-size: 1.2rem;
+    font-size: 1rem;  /* Ajustado para reducir el tamaño (antes 1.2rem) */
     text-align: center;
     text-shadow:
         0 0 10px #000000,
