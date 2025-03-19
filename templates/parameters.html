@@ -1,0 +1,117 @@
+{% extends 'base.html' %}
+
+{% block title %}
+Control de Parámetros
+{% endblock %}
+
+{% block content %}
+<div id="parameters-wrapper" style="opacity:0;">
+    <div class="lines-container">
+        
+        <!-- Breadcrumb con enlaces a lines.html -->
+        <h2 class="lines-title glow-text">
+            <a href="{{ url_for('lines') }}" style="color:inherit; text-decoration:none;">Líneas</a>
+            &nbsp;&gt;&nbsp;
+            <a href="{{ url_for('lines') }}" style="color:inherit; text-decoration:none;">Línea 1- L1</a>
+            &nbsp;&gt;&nbsp;
+            Control de Parámetros
+        </h2>
+        
+        <!-- Título principal de la página -->
+        <h2 class="line-heading glow-text" style="margin-bottom:30px;">Control de Parámetros</h2>
+
+        <!-- Barra de búsqueda alineada a la izquierda, sin ícono -->
+        <div style="
+            display: flex; 
+            justify-content: flex-start; 
+            align-items: center; 
+            gap: 15px; 
+            margin-bottom: 40px;
+        ">
+            <!-- Etiqueta "Buscar" -->
+            <span class="glow-text" style="font-size: 1.2rem;">Buscar</span>
+            
+            <!-- Input de búsqueda -->
+            <input 
+                type="text" 
+                placeholder="" 
+                style="
+                    width: 220px;
+                    padding: 8px 10px;
+                    border: 2px solid #fff;
+                    border-radius: 20px;
+                    background: transparent;
+                    color: #fff;
+                    outline: none;
+                    font-size: 1rem;
+                "
+            >
+        </div>
+        
+        <!-- Cuatro opciones centradas -->
+        <div style="display:flex; justify-content:center; gap:80px;">
+            
+            <!-- Opción 1 (funcional) -->
+            <div style="text-align:center;">
+                <div class="line-box" style="width:220px; height:130px; margin:0 auto;">
+                    <img 
+                        src="{{ url_for('static', filename='parameters/control_de_parámetros_1.png') }}" 
+                        alt="Control de Parámetros 1" 
+                        style="width:100%; height:100%; object-fit: cover;"
+                    >
+                </div>
+                <div style="margin-top:10px;">
+                    <!-- Un único enlace que engloba ambos textos -->
+                    <a href="{{ url_for('parameter_1') }}" style="text-decoration:none; color:inherit;">
+                        <!-- Texto superior, ligeramente más grande -->
+                        <div class="glow-text" style="font-size:1.4rem;">Lower 4NB</div>
+                        <!-- Texto inferior -->
+                        <div class="glow-text" style="font-size:1rem;">Reg_1698</div>
+                    </a>
+                </div>
+            </div>
+
+            <!-- Opción 2 (no funcional) -->
+            <div style="text-align:center;">
+                <div class="line-box" style="width:220px; height:130px; margin:0 auto;">Imagen</div>
+                <div style="margin-top:10px;">
+                    <a href="#" class="glow-text" style="color:inherit; text-decoration:none;">
+                        Control de Parámetro 2
+                    </a>
+                </div>
+            </div>
+
+            <!-- Opción 3 (no funcional) -->
+            <div style="text-align:center;">
+                <div class="line-box" style="width:220px; height:130px; margin:0 auto;">Imagen</div>
+                <div style="margin-top:10px;">
+                    <a href="#" class="glow-text" style="color:inherit; text-decoration:none;">
+                        Control de Parámetro 3
+                    </a>
+                </div>
+            </div>
+
+            <!-- Opción 4 (no funcional) -->
+            <div style="text-align:center;">
+                <div class="line-box" style="width:220px; height:130px; margin:0 auto;">Imagen</div>
+                <div style="margin-top:10px;">
+                    <a href="#" class="glow-text" style="color:inherit; text-decoration:none;">
+                        Control de Parámetro 4
+                    </a>
+                </div>
+            </div>
+
+        </div>
+
+    </div>
+</div>
+
+<script>
+    // Al cargar esta subpágina, fade-in del contenido
+    window.addEventListener('load', function() {
+        document.getElementById('parameters-wrapper').classList.add('fade-in-fast');
+        // El encabezado se mantiene visible
+        document.getElementById('main-header-wrapper').style.display = 'block';
+    });
+</script>
+{% endblock %}

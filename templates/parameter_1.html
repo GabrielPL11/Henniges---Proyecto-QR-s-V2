@@ -1,0 +1,56 @@
+{% extends 'base.html' %}
+
+{% block title %}
+Control de Parámetro 1
+{% endblock %}
+
+{% block content %}
+<div id="parameter1-wrapper" style="opacity:0;">
+    <div class="lines-container">
+        
+        <!-- Breadcrumb extendido -->
+        <h2 class="lines-title glow-text">
+            <a href="{{ url_for('lines') }}" style="color:inherit; text-decoration:none;">Líneas</a>
+            &nbsp;&gt;&nbsp;
+            <a href="{{ url_for('lines') }}" style="color:inherit; text-decoration:none;">Línea 1- L1</a>
+            &nbsp;&gt;&nbsp;
+            <a href="{{ url_for('parameters') }}" style="color:inherit; text-decoration:none;">Control de Parámetros</a>
+            &nbsp;&gt;&nbsp;
+            Lower 4NB - Reg_1698
+        </h2>
+        
+        <!-- Título principal -->
+        <h2 class="line-heading glow-text" style="margin-bottom:30px;">Lower 4NB - Reg_1698</h2>
+        
+        <!-- Contenedor centrado: Solo la columna izquierda -->
+        <div style="display: flex; justify-content: center;">
+            <!-- Columna izquierda: dos recuadros apilados -->
+            <div style="display: flex; flex-direction: column; gap: 30px;">
+                <!-- Recuadro superior: Descargar -->
+                <div style="text-align: center;">
+                    <div class="line-box" style="width:220px; height:130px; margin:0 auto;">
+                        Imagen
+                    </div>
+                    <div class="glow-text" style="margin-top:10px;">Descargar</div>
+                </div>
+                <!-- Recuadro inferior: Subir -->
+                <div style="text-align: center;">
+                    <div class="line-box" style="width:220px; height:130px; margin:0 auto;">
+                        Imagen
+                    </div>
+                    <div class="glow-text" style="margin-top:10px;">Subir</div>
+                </div>
+            </div>
+        </div>
+
+    </div>
+</div>
+
+<script>
+    // Al cargar esta subpágina, se aplica el efecto fade-in rápido solo al contenido
+    window.addEventListener('load', function() {
+        document.getElementById('parameter1-wrapper').classList.add('fade-in-fast');
+        document.getElementById('main-header-wrapper').style.display = 'block';
+    });
+</script>
+{% endblock %}

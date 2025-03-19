@@ -1,0 +1,108 @@
+{% extends 'base.html' %}
+
+{% block title %}
+GIA QR - Extrusión
+{% endblock %}
+
+{% block content %}
+
+<!-- CONTENEDOR DEL VIDEO (SPLASH SCREEN) -->
+<div id="video-container">
+    <video 
+        id="splash-video"
+        src="{{ url_for('static', filename='henniges_video.mp4') }}"
+        muted
+        playsinline
+        style="width:100%; height:auto;"
+    >
+        Tu navegador no soporta la etiqueta <code>video</code>.
+    </video>
+</div>
+
+<!-- CONTENIDO PRINCIPAL (OCULTO HASTA QUE EL VIDEO FINALIZA O SI NO SE REPRODUCE VIDEO) -->
+<div id="main-content" style="display:none;">
+
+    <!-- CONTENEDOR PARA LOS 6 BOTONES EN LA IZQUIERDA -->
+    <div class="button-container">
+        <button class="neon-button glow-text">L1</button>
+        <button class="neon-button glow-text">L2</button>
+        <button class="neon-button glow-text">L3</button>
+        <button class="neon-button glow-text">L4</button>
+        <button class="neon-button glow-text">L5</button>
+        <button class="neon-button glow-text">L6</button>
+    </div>
+
+    <!-- CONTENEDOR PARA "plano.png", CON DEGRADADO POR LOS 4 LADOS -->
+    <div class="plano-container">
+        <img 
+            src="{{ url_for('static', filename='plano.png') }}" 
+            alt="Plano" 
+            class="plano-image"
+        >
+        <!-- CONTENEDOR PARA QR1 Y SU TEXTO ASOCIADO -->
+        <div class="qr1-container">
+            <img
+                src="{{ url_for('static', filename='qr1.png') }}"
+                alt="QR1"
+                class="qr1-image"
+            >
+            <span class="qr1-text">Máquina 1</span>
+        </div>
+    </div>
+</div>
+
+<!-- SCRIPT PARA MANEJAR EL VIDEO, LAS TRANSICIONES Y EL ENCABEZADO -->
+<script>
+    const splashVideo = document.getElementById('splash-video');
+    const videoContainer = document.getElementById('video-container');
+    const mainContent = document.getElementById('main-content');
+    const headerWrapper = document.getElementById('main-header-wrapper');
+
+    // Detectar el tipo de navegación y el referrer
+    const navigationEntries = performance.getEntriesByType("navigation");
+    let navType = navigationEntries.length ? navigationEntries[0].type : "";
+    const referrer = document.referrer;
+
+    // Decide si reproducir el video:
+    //   - Se reproduce si navType = "reload" (refresh) o si referrer está vacío (llegada directa).
+    //   - Si venimos de otra página interna, no reproducir el video.
+    let shouldPlayVideo = false;
+    if (navType === "reload" || referrer === "") {
+        shouldPlayVideo = true;
+    }
+
+    // Función para mostrar el header y el contenido principal con fade-in
+    function showMainContentWithFade() {
+        // Ocultamos el contenedor del video
+        videoContainer.style.display = 'none';
+        // Mostramos el header (el div en base.html)
+        headerWrapper.style.display = 'block';
+        // Mostramos el contenido principal
+        mainContent.style.display = 'block';
+        // Animación fade-in (2s) tal como estaba configurado en style.css
+        mainContent.classList.add('fade-in');
+    }
+
+    if (shouldPlayVideo) {
+        // Autoplay del video
+        splashVideo.autoplay = true;
+        splashVideo.play();
+
+        // Cuando el video finaliza naturalmente, aparece el contenido con fade-in
+        splashVideo.addEventListener('ended', function() {
+            showMainContentWithFade();
+        });
+
+        // Si el usuario hace clic en el video, se salta al contenido inmediatamente
+        splashVideo.addEventListener('click', function() {
+            splashVideo.pause();
+            splashVideo.currentTime = splashVideo.duration;
+            showMainContentWithFade();
+        });
+    } else {
+        // No reproducir video: ocultar contenedor video, mostrar header y main con fade-in
+        showMainContentWithFade();
+    }
+</script>
+
+{% endblock %}

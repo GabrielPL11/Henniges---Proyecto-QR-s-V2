@@ -1,0 +1,83 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <title>{% block title %}{% endblock %}</title>
+    <!-- Favicon -->
+    <link rel="icon" href="{{ url_for('static', filename='icon.png') }}" type="image/png">
+    <!-- Hoja de estilos principal -->
+    <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+</head>
+<body>
+
+    <!-- 
+        Encabezado (imágenes y menú).
+        Se oculta inicialmente (solo para la página de inicio con video).
+        Después de index, permanece visible sin animación.
+    -->
+    <div id="main-header-wrapper" style="display: none;">
+        <div class="main-header">
+            <!-- Imagen del título a la izquierda (GIA QR) -->
+            <img 
+                src="{{ url_for('static', filename='gia_qr_title_logo.png') }}" 
+                alt="GIA QR Title Logo" 
+                class="title-logo"
+            >
+            <!-- Imagen de Henniges a la derecha -->
+            <a href="https://www.hennigesautomotive.com/" target="_blank">
+                <img 
+                    src="{{ url_for('static', filename='hennigues_imagen.png') }}" 
+                    alt="Hennigues - Imagen" 
+                    class="logo"
+                >
+            </a>
+        </div>
+
+        <!-- BARRA SUPERIOR CON 5 BOTONES -->
+        <div class="top-menu">
+            <!-- Inicio -->
+            <a href="{{ url_for('index') }}" id="inicio-link">
+                <button class="top-menu-button glow-text">Inicio</button>
+            </a>
+            <!-- Líneas -->
+            <a href="{{ url_for('lines') }}" id="lines-link">
+                <button class="top-menu-button glow-text">Líneas</button>
+            </a>
+            <!-- Máquinas (nueva ruta para el encabezado) -->
+            <a href="{{ url_for('machine_heading') }}" id="maquinas-link">
+                <button class="top-menu-button glow-text">Máquinas</button>
+            </a>
+            <!-- Documentos -->
+            <a href="{{ url_for('documents') }}" id="documentos-link">
+                <button class="top-menu-button glow-text">Documentos</button>
+            </a>
+            <!-- QR's -->
+            <a href="#" id="qrs-link">
+                <button class="top-menu-button glow-text">QR's</button>
+            </a>
+        </div>
+    </div>
+
+    {% block content %}{% endblock %}
+
+    <!-- SCRIPT GENERAL: fade-out para navegar entre las 5 secciones del menú principal -->
+    <script>
+        const menuLinks = document.querySelectorAll('#inicio-link, #lines-link, #maquinas-link, #documentos-link, #qrs-link');
+        menuLinks.forEach(link => {
+            link.addEventListener('click', function(e) {
+                // Evitar fade si el enlace es vacío (#)
+                if (this.getAttribute('href') !== '#') {
+                    e.preventDefault();
+                    const targetUrl = this.getAttribute('href');
+                    // Fade-out en el <body> (0.5s)
+                    document.body.classList.add('fade-out');
+                    setTimeout(function(){
+                        window.location.href = targetUrl;
+                    }, 500);
+                }
+            });
+        });
+    </script>
+
+</body>
+</html>

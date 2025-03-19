@@ -1,0 +1,122 @@
+{% extends 'base.html' %}
+
+{% block title %}
+Máquinas
+{% endblock %}
+
+{% block content %}
+<div id="machines-wrapper" style="opacity:0;">
+    <!-- Usamos "lines-container" para mantener la misma estructura que en parameters.html -->
+    <div class="lines-container">
+        
+        <!-- Breadcrumb con "Líneas" y "Línea 1- L1" -->
+        <h2 class="lines-title glow-text">
+            <a href="{{ url_for('lines') }}" style="color:inherit; text-decoration:none;">Líneas</a> &gt;
+            <a href="{{ url_for('lines') }}" style="color:inherit; text-decoration:none;">Línea 1- L1</a> &gt;
+            Máquinas
+        </h2>
+        
+        <!-- Título principal -->
+        <h2 class="line-heading glow-text" style="margin-bottom:30px;">Máquinas</h2>
+
+        <!-- Barra de búsqueda (idéntica a parameters.html) -->
+        <div style="
+            display: flex; 
+            justify-content: flex-start; 
+            align-items: center; 
+            gap: 15px; 
+            margin-bottom: 40px;
+        ">
+            <span class="glow-text" style="font-size: 1.2rem;">Buscar</span>
+            <input 
+                type="text" 
+                placeholder="" 
+                style="
+                    width: 220px;
+                    padding: 8px 10px;
+                    border: 2px solid #fff;
+                    border-radius: 20px;
+                    background: transparent;
+                    color: #fff;
+                    outline: none;
+                    font-size: 1rem;
+                "
+            >
+        </div>
+
+        <!-- Contenedor de tarjetas (4 ejemplos) -->
+        <div style="display:flex; flex-wrap: wrap; justify-content:center; gap:80px;">
+
+            <!-- Tarjeta 1: Cortadora Max Müller (completa, imagen y texto redireccionan) -->
+            <div style="text-align:center;">
+                <a href="{{ url_for('machine_detail') }}" style="text-decoration:none; color:inherit;">
+                    <div class="line-box" style="width:220px; height:130px; margin:0 auto;">
+                        <img 
+                            src="{{ url_for('static', filename='machines/max_muller.jpeg') }}" 
+                            alt="Cortadora Max Müller" 
+                            style="width:100%; height:100%; object-fit: cover;"
+                        >
+                    </div>
+                    <div style="margin-top:10px;">
+                        <div class="glow-text" style="font-size:1.4rem;">Cortadora Max Müller</div>
+                        <div class="glow-text" style="font-size:1rem;">L3</div>
+                    </div>
+                </a>
+            </div>
+
+            <!-- Tarjeta 2: Máquina 2 (sin redireccionar) -->
+            <div style="text-align:center;">
+                <div class="line-box" style="width:220px; height:130px; margin:0 auto;">
+                    <img 
+                        src="{{ url_for('static', filename='machines/maquina2.jpeg') }}" 
+                        alt="Máquina 2" 
+                        style="width:100%; height:100%; object-fit: cover;"
+                    >
+                </div>
+                <div style="margin-top:10px;">
+                    <div class="glow-text" style="font-size:1.4rem;">Máquina 2</div>
+                    <div class="glow-text" style="font-size:1rem;">Detalles</div>
+                </div>
+            </div>
+
+            <!-- Tarjeta 3: Máquina 3 (sin redireccionar) -->
+            <div style="text-align:center;">
+                <div class="line-box" style="width:220px; height:130px; margin:0 auto;">
+                    <img 
+                        src="{{ url_for('static', filename='machines/maquina3.jpeg') }}" 
+                        alt="Máquina 3" 
+                        style="width:100%; height:100%; object-fit: cover;"
+                    >
+                </div>
+                <div style="margin-top:10px;">
+                    <div class="glow-text" style="font-size:1.4rem;">Máquina 3</div>
+                    <div class="glow-text" style="font-size:1rem;">Detalles</div>
+                </div>
+            </div>
+
+            <!-- Tarjeta 4: Máquina 4 (sin redireccionar) -->
+            <div style="text-align:center;">
+                <div class="line-box" style="width:220px; height:130px; margin:0 auto;">
+                    <img 
+                        src="{{ url_for('static', filename='machines/maquina4.jpeg') }}" 
+                        alt="Máquina 4" 
+                        style="width:100%; height:100%; object-fit: cover;"
+                    >
+                </div>
+                <div style="margin-top:10px;">
+                    <div class="glow-text" style="font-size:1.4rem;">Máquina 4</div>
+                    <div class="glow-text" style="font-size:1rem;">Detalles</div>
+                </div>
+            </div>
+
+        </div>
+    </div>
+</div>
+
+<script>
+    window.addEventListener('load', function(){
+        document.getElementById('machines-wrapper').classList.add('fade-in-fast');
+        document.getElementById('main-header-wrapper').style.display = 'block';
+    });
+</script>
+{% endblock %}

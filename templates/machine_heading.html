@@ -1,0 +1,79 @@
+{% extends 'base.html' %}
+
+{% block title %}
+Máquinas
+{% endblock %}
+
+{% block content %}
+<div id="documents-wrapper" style="opacity: 0;">
+    <div class="documents-container">
+
+        <!-- Título principal -->
+        <h1 class="documents-main-title glow-text">Máquinas</h1>
+        <hr class="documents-separator">
+
+        <!-- Segundo título -->
+        <h2 class="documents-subtitle glow-text">Máquinas</h2>
+
+        <!-- Barra de búsqueda (idéntica a parameters.html, sin ícono) -->
+        <div style="
+            display: flex;
+            justify-content: flex-start;
+            align-items: center;
+            gap: 15px;
+            margin-bottom: 40px;
+        ">
+            <span class="glow-text" style="font-size: 1.2rem;">Buscar</span>
+            <input 
+                type="text" 
+                placeholder="" 
+                style="
+                    width: 220px;
+                    padding: 8px 10px;
+                    border: 2px solid #fff;
+                    border-radius: 20px;
+                    background: transparent;
+                    color: #fff;
+                    outline: none;
+                    font-size: 1rem;
+                "
+            >
+        </div>
+
+        <!-- Tabla con bordes visibles -->
+        <div style="overflow-x: auto;">
+            <table style="width:100%; border-collapse: collapse;">
+                <thead>
+                    <tr>
+                        <th class="glow-text" style="border: 1px solid #fff; padding: 10px; text-align: left;">Línea</th>
+                        <th class="glow-text" style="border: 1px solid #fff; padding: 10px; text-align: left;">Modelo</th>
+                        <th class="glow-text" style="border: 1px solid #fff; padding: 10px; text-align: left;">Marca</th>
+                        <th class="glow-text" style="border: 1px solid #fff; padding: 10px; text-align: left;">No. de serie</th>
+                        <th class="glow-text" style="border: 1px solid #fff; padding: 10px; text-align: left;">Tipo</th>
+                        <th class="glow-text" style="border: 1px solid #fff; padding: 10px; text-align: left;">Comentarios</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td class="glow-text" style="border: 1px solid #fff; padding: 10px;">L1</td>
+                        <td class="glow-text" style="border: 1px solid #fff; padding: 10px;">Modelo X</td>
+                        <td class="glow-text" style="border: 1px solid #fff; padding: 10px;">Marca Y</td>
+                        <td class="glow-text" style="border: 1px solid #fff; padding: 10px;">12345</td>
+                        <td class="glow-text" style="border: 1px solid #fff; padding: 10px;">Cortadora</td>
+                        <td class="glow-text" style="border: 1px solid #fff; padding: 10px;">Sin comentarios</td>
+                    </tr>
+                    <!-- Agrega más filas según sea necesario -->
+                </tbody>
+            </table>
+        </div>
+
+    </div>
+</div>
+
+<script>
+    window.addEventListener('load', function(){
+        document.getElementById('documents-wrapper').classList.add('fade-in-fast');
+        document.getElementById('main-header-wrapper').style.display = 'block';
+    });
+</script>
+{% endblock %}

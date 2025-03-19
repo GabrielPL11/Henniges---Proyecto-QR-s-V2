@@ -1,0 +1,121 @@
+{% extends 'base.html' %}
+
+{% block title %}
+Líneas
+{% endblock %}
+
+{% block content %}
+<div id="lines-wrapper" style="opacity: 0;">
+    <div class="lines-container">
+        
+        <h2 class="lines-title glow-text">Líneas</h2>
+        
+        <!-- LÍNEA 1 -->
+        <div class="line-section">
+            <h3 class="line-heading glow-text">Línea 1 – L1</h3>
+            <div class="line-row">
+                <div class="line-box">Imagen</div>
+                <div class="line-box">Imagen</div>
+                <div class="line-box">Imagen</div>
+            </div>
+            <div class="line-footer">
+                <div class="footer-item glow-text">EPSS</div>
+                
+                <!-- Enlace a Control de Parámetros de L1 -->
+                <div class="footer-item glow-text">
+                    <a href="{{ url_for('parameters') }}" style="color:inherit;text-decoration:none;">
+                        Control de Parámetros
+                    </a>
+                </div>
+                
+                <!-- Enlace a Máquinas (modificado para que redireccione a machines.html) -->
+                <div class="footer-item glow-text">
+                    <a href="{{ url_for('machines') }}" style="color:inherit;text-decoration:none;">
+                        Máquinas
+                    </a>
+                </div>
+            </div>
+        </div>
+        
+        <hr>
+
+        <!-- LÍNEA 3 -->
+        <div class="line-section">
+            <h3 class="line-heading glow-text">Línea 3 – L3</h3>
+            <div class="line-row">
+                <div class="line-box">Imagen</div>
+                <div class="line-box">Imagen</div>
+                <div class="line-box">Imagen</div>
+            </div>
+            <div class="line-footer">
+                <div class="footer-item glow-text">EPSS</div>
+                <div class="footer-item glow-text">Control de Parámetros</div>
+                <div class="footer-item glow-text">Máquinas</div>
+            </div>
+        </div>
+
+        <hr>
+
+        <!-- LÍNEA 4 -->
+        <div class="line-section">
+            <h3 class="line-heading glow-text">Línea 4 – L4</h3>
+            <div class="line-row">
+                <div class="line-box">Imagen</div>
+                <div class="line-box">Imagen</div>
+                <div class="line-box">Imagen</div>
+            </div>
+            <div class="line-footer">
+                <div class="footer-item glow-text">EPSS</div>
+                <div class="footer-item glow-text">Control de Parámetros</div>
+                <div class="footer-item glow-text">Máquinas</div>
+            </div>
+        </div>
+
+        <hr>
+
+        <!-- LÍNEA 5  -->
+        <div class="line-section">
+            <h3 class="line-heading glow-text">Línea 5 – L5</h3>
+            <div class="line-row">
+                <div class="line-box">Imagen</div>
+                <div class="line-box">Imagen</div>
+                <div class="line-box">Imagen</div>
+            </div>
+            <div class="line-footer">
+                <div class="footer-item glow-text">EPSS</div>
+                <div class="footer-item glow-text">Control de Parámetros</div>
+                <div class="footer-item glow-text">Máquinas</div>
+            </div>
+        </div>
+
+        <hr>
+        
+        <!-- LÍNEA 6 -->
+        <div class="line-section">
+            <h3 class="line-heading glow-text">Línea 6 – L6</h3>
+            <div class="line-row">
+                <div class="line-box">Imagen</div>
+                <div class="line-box">Imagen</div>
+                <div class="line-box">Imagen</div>
+            </div>
+            <div class="line-footer">
+                <div class="footer-item glow-text">EPSS</div>
+                <div class="footer-item glow-text">Control de Parámetros</div>
+                <div class="footer-item glow-text">Máquinas</div>
+            </div>
+        </div>
+        
+        <!-- Agrega más líneas si lo deseas -->
+        
+    </div>
+</div>
+
+<script>
+    // Al cargar la página, fade-in rápido (0.5s) SOLO para el contenido
+    window.addEventListener('load', function(){
+        document.getElementById('lines-wrapper').classList.add('fade-in-fast');
+        // Mostrar el header (en caso de que viniera oculto de index)
+        document.getElementById('main-header-wrapper').style.display = 'block';
+    });
+</script>
+{% endblock %} 

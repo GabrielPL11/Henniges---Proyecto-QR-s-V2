@@ -1,0 +1,58 @@
+{% extends 'base.html' %}
+
+{% block title %}
+Documentos
+{% endblock %}
+
+{% block content %}
+<div id="documents-wrapper" style="opacity: 0;">
+    <div class="documents-container">
+        
+        <!-- Título principal "Documentos" -->
+        <h1 class="documents-main-title glow-text">Documentos</h1>
+        <hr class="documents-separator">
+
+        <!-- Segundo título (se mantiene el título, pero se quita la línea de separación) -->
+        <h2 class="documents-subtitle glow-text">Documentos</h2>
+        <!-- Línea eliminada: <hr class="documents-separator"> -->
+
+        <!-- Barra de búsqueda -->
+        <div class="documents-search">
+            <label for="search-docs">Buscar</label>
+            <input type="text" id="search-docs" class="search-input" placeholder="Escribe el nombre del documento...">
+        </div>
+
+        <!-- Contenedor en cuadrícula para los documentos -->
+        <div class="documents-grid">
+            <!-- Ejemplo de varias tarjetas de documento -->
+            <div class="document-card">
+                <div class="document-image">Imagen</div>
+                <div class="document-label glow-text">Documento 1</div>
+            </div>
+            <div class="document-card">
+                <div class="document-image">Imagen</div>
+                <div class="document-label glow-text">Documento 2</div>
+            </div>
+            <div class="document-card">
+                <div class="document-image">Imagen</div>
+                <div class="document-label glow-text">Documento 3</div>
+            </div>
+            <div class="document-card">
+                <div class="document-image">Imagen</div>
+                <div class="document-label glow-text">Documento 4</div>
+            </div>
+            <!-- Repite según lo necesites -->
+        </div>
+
+    </div>
+</div>
+
+<script>
+    // Al cargar la página, se aplica el efecto fade-in rápido (0.5 s)
+    window.addEventListener('load', function(){
+        document.getElementById('documents-wrapper').classList.add('fade-in-fast');
+        // Mostramos el header (por si veníamos de la vista con video)
+        document.getElementById('main-header-wrapper').style.display = 'block';
+    });
+</script>
+{% endblock %}

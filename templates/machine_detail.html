@@ -1,0 +1,54 @@
+{% extends 'base.html' %}
+
+{% block title %}
+Cortadora Max Müller
+{% endblock %}
+
+{% block content %}
+<div id="machine-detail-wrapper" style="opacity: 0;">
+    <div class="lines-container">
+        
+        <!-- Breadcrumb: "Líneas > Línea 1- L1 > Máquinas > Cortadora Max Müller" -->
+        <h2 class="lines-title glow-text">
+            <a href="{{ url_for('lines') }}" style="color:inherit; text-decoration:none;">Líneas</a> &gt;
+            <a href="{{ url_for('lines') }}" style="color:inherit; text-decoration:none;">Línea 1- L1</a> &gt;
+            <a href="{{ url_for('machines') }}" style="color:inherit; text-decoration:none;">Máquinas</a> &gt;
+            Cortadora Max Müller
+        </h2>
+
+        <!-- Título principal: ahora muestra "Cortadora Max Müller - L3" -->
+        <h3 class="line-heading glow-text" style="margin-bottom:30px;">Cortadora Max Müller - L3</h3>
+
+        <!-- Sección de imágenes (se mantienen 3 recuadros idénticos a lines.html) -->
+        <div class="line-row">
+            <div class="line-box" style="text-align:center;">Imagen</div>
+            <div class="line-box" style="text-align:center;">Imagen</div>
+            <div class="line-box" style="text-align:center;">Imagen</div>
+        </div>
+
+        <!-- Footer con 3 textos -->
+        <div class="line-footer">
+            <!-- Se agrega el enlace de descarga en TPM -->
+            <div class="footer-item glow-text">
+                <a 
+                    href="{{ url_for('static', filename='machines/tpm/TPM - Cortadora Max Müller - L3.pdf') }}" 
+                    download 
+                    style="color:inherit; text-decoration:none;"
+                >
+                    TPM
+                </a>
+            </div>
+            <div class="footer-item glow-text">Mantenimiento preventivo</div>
+            <div class="footer-item glow-text">Instructivo de trabajo</div>
+        </div>
+
+    </div>
+</div>
+
+<script>
+    window.addEventListener('load', function(){
+        document.getElementById('machine-detail-wrapper').classList.add('fade-in-fast');
+        document.getElementById('main-header-wrapper').style.display = 'block';
+    });
+</script>
+{% endblock %}
