@@ -25,7 +25,6 @@ GIA QR - Extrusión
     <!-- CONTENEDOR PARA LOS 6 BOTONES EN LA IZQUIERDA -->
     <div class="button-container">
         <button class="neon-button glow-text">L1</button>
-        <button class="neon-button glow-text">L2</button>
         <button class="neon-button glow-text">L3</button>
         <button class="neon-button glow-text">L4</button>
         <button class="neon-button glow-text">L5</button>
@@ -46,10 +45,19 @@ GIA QR - Extrusión
                 alt="QR1"
                 class="qr1-image"
             >
-            <span class="qr1-text">Máquina 1</span>
+            <span class="qr1-text">Máquina<br>1</span>
         </div>
     </div>
 </div>
+
+<!-- FOOTER (oculto inicialmente) -->
+<footer class="footer" id="footer" style="display:none;">
+    © 2025 Henniges Automotive - GIA QR - Extrusión. Todos los derechos reservados.
+    <br>
+    Visítanos en <a href="https://www.hennigesautomotive.com/" target="_blank" style="color: #FFFFFF; text-decoration: underline; text-decoration-color: #FFFFFF; text-shadow: 0 0 5px #FFFFFF, 0 0 10px #FFFFFF, 0 0 15px #FFFFFF;">
+        www.hennigesautomotive.com
+    </a>    
+</footer>
 
 <!-- SCRIPT PARA MANEJAR EL VIDEO, LAS TRANSICIONES Y EL ENCABEZADO -->
 <script>
@@ -57,6 +65,7 @@ GIA QR - Extrusión
     const videoContainer = document.getElementById('video-container');
     const mainContent = document.getElementById('main-content');
     const headerWrapper = document.getElementById('main-header-wrapper');
+    const footer = document.getElementById('footer');
 
     // Detectar el tipo de navegación y el referrer
     const navigationEntries = performance.getEntriesByType("navigation");
@@ -71,7 +80,7 @@ GIA QR - Extrusión
         shouldPlayVideo = true;
     }
 
-    // Función para mostrar el header y el contenido principal con fade-in
+    // Función para mostrar el header, el contenido principal y el footer con fade-in
     function showMainContentWithFade() {
         // Ocultamos el contenedor del video
         videoContainer.style.display = 'none';
@@ -79,8 +88,11 @@ GIA QR - Extrusión
         headerWrapper.style.display = 'block';
         // Mostramos el contenido principal
         mainContent.style.display = 'block';
-        // Animación fade-in (2s) tal como estaba configurado en style.css
+        // Mostramos el footer
+        footer.style.display = 'block';
+        // Aplicamos animación fade-in al contenido principal y al footer
         mainContent.classList.add('fade-in');
+        footer.classList.add('fade-in');
     }
 
     if (shouldPlayVideo) {
@@ -100,7 +112,7 @@ GIA QR - Extrusión
             showMainContentWithFade();
         });
     } else {
-        // No reproducir video: ocultar contenedor video, mostrar header y main con fade-in
+        // No reproducir video: ocultar contenedor video, mostrar header, contenido principal y footer con fade-in
         showMainContentWithFade();
     }
 </script>
