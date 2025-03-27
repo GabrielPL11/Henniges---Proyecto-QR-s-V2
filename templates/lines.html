@@ -19,7 +19,9 @@ Líneas
                 <div class="line-box">Imagen</div>
             </div>
             <div class="line-footer">
-                <div class="footer-item glow-text">EPSS</div>
+                <div class="footer-item glow-text">
+                    <a href="{{ url_for('epss') }}" style="color:inherit; text-decoration:none;">EPSS</a>
+                </div>                
                 
                 <!-- Enlace a Control de Parámetros de L1 -->
                 <div class="footer-item glow-text">
@@ -118,4 +120,4 @@ Líneas
         document.getElementById('main-header-wrapper').style.display = 'block';
     });
 </script>
-{% endblock %} 
+{% endblock %}

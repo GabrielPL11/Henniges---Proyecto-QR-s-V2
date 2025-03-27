@@ -480,3 +480,83 @@
         0 0 10px rgba(255, 255, 255, 0.6),
         0 0 15px rgba(255, 255, 255, 0.4);
 }
+
+/* =========================================================
+   SCROLLBAR PERSONALIZADO SUPERPUESTO
+   - Se superpone al contenido (overlay).
+   - Mitad de ancho (7px).
+   - Fondo 100% transparente.
+   - Glow blanco coherente.
+   ========================================================= */
+
+/* Fuerza el scrollbar overlay en navegadores basados en Chromium */
+body {
+    margin: 0;
+    padding: 0;
+    background-color: #000000; /* Mantén tu fondo negro global */
+    overflow-y: overlay; /* NO estándar, funciona en Chrome/Edge/Opera */
+}
+
+/* Scrollbar más delgado y transparente */
+::-webkit-scrollbar {
+    width: 7px;               /* Mitad de 14px */
+    background: none !important; /* Quita fondo */
+}
+
+/* El track (fondo) del scrollbar */
+::-webkit-scrollbar-track {
+    background: none !important; /* 100% transparente */
+}
+
+/* Pieza del track (a veces necesario para forzar transparencia) */
+::-webkit-scrollbar-track-piece {
+    background: none !important;
+}
+
+/* Barra (thumb) con glow blanco */
+::-webkit-scrollbar-thumb {
+    background-color: #FFFFFF;
+    box-shadow:
+        0 0 5px  rgba(255, 255, 255, 0.8),
+        0 0 10px rgba(255, 255, 255, 0.6),
+        0 0 15px rgba(255, 255, 255, 0.4);
+}
+
+/* Hover del thumb: intensifica el glow */
+::-webkit-scrollbar-thumb:hover {
+    background-color: #FFFFFF;
+    box-shadow:
+        0 0 8px  rgba(255, 255, 255, 0.8),
+        0 0 15px rgba(255, 255, 255, 0.6),
+        0 0 20px rgba(255, 255, 255, 0.4);
+}
+
+/* Flechas (arriba y abajo) */
+::-webkit-scrollbar-button {
+    background: #FFFFFF;
+    box-shadow:
+        0 0 5px  rgba(255, 255, 255, 0.8),
+        0 0 10px rgba(255, 255, 255, 0.6),
+        0 0 15px rgba(255, 255, 255, 0.4);
+    height: 10px; /* Ajusta la altura si lo deseas */
+}
+
+/* Flecha "increment" (scroll down) */
+::-webkit-scrollbar-button:increment {
+    background: #FFFFFF;
+}
+
+/* Flecha "decrement" (scroll up) */
+::-webkit-scrollbar-button:decrement {
+    background: #FFFFFF;
+}
+
+  /* Parte esquina (cuando scrollbar vertical y horizontal se cruzan) */
+::-webkit-scrollbar-corner {
+    background: none !important; 
+}
+
+/* ======================================================================
+   FIN DEL CÓDIGO CSS
+   ====================================================================== */
+/* ======================================================================

@@ -1,0 +1,125 @@
+{% extends 'base.html' %}
+
+{% block title %}
+EPSS
+{% endblock %}
+
+{% block content %}
+<div id="epss-wrapper" style="opacity:0;">
+    <div class="lines-container">
+        
+        <!-- Breadcrumb con enlaces a lines.html -->
+        <h2 class="lines-title glow-text">
+            <a href="{{ url_for('lines') }}" style="color:inherit; text-decoration:none;">Líneas</a>
+            &nbsp;&gt;&nbsp;
+            <a href="{{ url_for('lines') }}" style="color:inherit; text-decoration:none;">Línea 1 – L1</a>
+            &nbsp;&gt;&nbsp;
+            EPSS
+        </h2>
+        
+        <!-- Título principal de la página -->
+        <h2 class="line-heading glow-text" style="margin-bottom:30px;">EPSS</h2>
+
+        <!-- Barra de búsqueda alineada a la izquierda -->
+        <div style="
+            display: flex; 
+            justify-content: flex-start; 
+            align-items: center; 
+            gap: 15px; 
+            margin-bottom: 40px;
+        ">
+            <!-- Etiqueta "Buscar" -->
+            <span class="glow-text" style="font-size: 1.2rem;">Buscar</span>
+            
+            <!-- Input de búsqueda -->
+            <input 
+                type="text" 
+                placeholder="Buscar EPSS..." 
+                style="
+                    width: 220px;
+                    padding: 8px 10px;
+                    border: 2px solid #fff;
+                    border-radius: 20px;
+                    background: transparent;
+                    color: #fff;
+                    outline: none;
+                    font-size: 1rem;
+                "
+            >
+        </div>
+        
+        <!-- Cuatro ejemplos de EPSS centrados -->
+        <div style="display:flex; justify-content:center; gap:80px;">
+            
+            <!-- Ejemplo 1 (funcional) -->
+            <div style="text-align:center;">
+                <div class="line-box" style="width:220px; height:130px; margin:0 auto;">
+                    <img 
+                        src="{{ url_for('static', filename='epss/epss1.png') }}" 
+                        alt="EPSS 1" 
+                        style="width:100%; height:100%; object-fit: cover;"
+                    >
+                </div>
+                <div style="margin-top:10px;">
+                    <!-- Ahora enlaza a epss_1.html -->
+                    <a href="{{ url_for('epss_1') }}" style="text-decoration:none; color:inherit;">
+                        <div class="glow-text" style="font-size:1.4rem;">Lower 4NB</div>
+                        <div class="glow-text" style="font-size:1rem;">Doc_1236</div>
+                    </a>
+                </div>
+            </div>
+
+            <!-- Ejemplo 2 (placeholder) -->
+            <div style="text-align:center;">
+                <div class="line-box" style="width:220px; height:130px; margin:0 auto;">
+                    <img 
+                        src="{{ url_for('static', filename='epss/epss2.png') }}" 
+                        alt="EPSS 2" 
+                        style="width:100%; height:100%; object-fit: cover;"
+                    >
+                </div>
+                <div style="margin-top:10px;">
+                    <a href="#" class="glow-text" style="color:inherit; text-decoration:none;">
+                        EPSS 2
+                    </a>
+                </div>
+            </div>
+
+            <!-- Ejemplo 3 (placeholder) -->
+            <div style="text-align:center;">
+                <div class="line-box" style="width:220px; height:130px; margin:0 auto;">
+                    Imagen
+                </div>
+                <div style="margin-top:10px;">
+                    <a href="#" class="glow-text" style="color:inherit; text-decoration:none;">
+                        EPSS 3
+                    </a>
+                </div>
+            </div>
+
+            <!-- Ejemplo 4 (placeholder) -->
+            <div style="text-align:center;">
+                <div class="line-box" style="width:220px; height:130px; margin:0 auto;">
+                    Imagen
+                </div>
+                <div style="margin-top:10px;">
+                    <a href="#" class="glow-text" style="color:inherit; text-decoration:none;">
+                        EPSS 4
+                    </a>
+                </div>
+            </div>
+
+        </div>
+
+    </div>
+</div>
+
+<script>
+    // Al cargar esta subpágina, se aplica el efecto fade-in rápido al contenido
+    window.addEventListener('load', function() {
+        document.getElementById('epss-wrapper').classList.add('fade-in-fast');
+        // El encabezado se mantiene visible
+        document.getElementById('main-header-wrapper').style.display = 'block';
+    });
+</script>
+{% endblock %}

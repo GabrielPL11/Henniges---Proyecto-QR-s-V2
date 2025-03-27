@@ -32,6 +32,14 @@ def parameters():
 def parameter_1():
     return render_template('parameter_1.html')
 
+@app.route('/lines/l1/epss')
+def epss():
+    return render_template('epss.html')
+
+@app.route('/lines/l1/epss/1')
+def epss_1():
+    return render_template('epss_1.html')
+
 @app.route('/machines/max_muller')
 def machine_detail():
     return render_template('machine_detail.html')
