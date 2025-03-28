@@ -59,6 +59,7 @@ input[type="date"]::-webkit-calendar-picker-indicator {
                         display:flex; 
                         align-items:center; 
                         justify-content:center;
+                        font-size: 1rem; /* <- AQUÍ */
                     "
                 >
                     <!-- Imagen representativa -->
@@ -77,6 +78,7 @@ input[type="date"]::-webkit-calendar-picker-indicator {
                             cursor:pointer;
                             border-radius:5px;
                             font-weight:bold;
+                            font-size: 1rem; /* <- AQUÍ */
                         "
                     >
                         Descargar Control de Parámetros
@@ -115,7 +117,7 @@ input[type="date"]::-webkit-calendar-picker-indicator {
                             font-weight:bold;
                         "
                     >
-                        Subir Archivo
+                        Subir Nuevo Control de Parámetros
                     </label>
                     <input 
                         type="file" 
@@ -494,7 +496,6 @@ generateDatesBtn.addEventListener('click', () => {
     const endVal = endDateInput.value;
     if (!startVal || !endVal) return;
 
-    // => Forzar a "medianoche local" para evitar offset
     const start = parseDateYMD(startVal);
     const end = parseDateYMD(endVal);
     if (start > end) return;
@@ -579,7 +580,7 @@ function addRowForDate(runName, dateStr) {
     fileInput.onchange = (e) => handleDayFileUpload(e, runName, dateStr);
 
     const uploadBtn = document.createElement('button');
-    uploadBtn.textContent = 'Subir Archivo';
+    uploadBtn.textContent = 'Subir Nuevo Control de Parámetros';
     uploadBtn.style.padding = '6px';
     uploadBtn.style.background = '#111';
     uploadBtn.style.color = '#fff';
@@ -655,7 +656,6 @@ function handleDayFileUpload(e, runName, dateStr) {
             dateTime: dateTime
         });
         updateLastFileCell(runName, dateStr);
-        // No alert
     };
     reader.readAsDataURL(file);
 }
@@ -690,7 +690,6 @@ function showHistory(runName, dateStr) {
     if (!runInfo) return;
     const uploads = runInfo.records[dateStr] || [];
     if (uploads.length === 0) {
-        // Silencio
         return;
     }
     let html = `<h3>Historial de archivos - ${dateStr} (Corrida: ${runName})</h3><ul>`;
