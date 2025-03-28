@@ -5,10 +5,17 @@ Control de Parámetro 1
 {% endblock %}
 
 {% block content %}
+<style>
+/* Ícono del calendario en blanco */
+input[type="date"]::-webkit-calendar-picker-indicator {
+    filter: invert(100%);
+}
+</style>
+
 <div id="parameter1-wrapper" style="opacity:0;">
     <div class="lines-container">
         
-        <!-- Breadcrumb extendido -->
+        <!-- BREADCRUMB -->
         <h2 class="lines-title glow-text">
             <a href="{{ url_for('lines') }}" style="color:inherit; text-decoration:none;">Líneas</a>
             &nbsp;&gt;&nbsp;
@@ -19,37 +26,289 @@ Control de Parámetro 1
             Lower 4NB - Reg_1698
         </h2>
         
-        <!-- Contenedor flex para ubicar los textos a izquierda y derecha -->
+        <!-- ENCABEZADO: TEXTO IZQUIERDA/DERECHA -->
         <div style="display: flex; align-items: center; justify-content: space-between; margin-bottom: 30px;">
-            <!-- Texto principal (izquierda) -->
             <h2 class="line-heading glow-text" style="margin:0;">
                 Lower 4NB - Reg_1698
             </h2>
-            <!-- Texto secundario (derecha) -->
             <h2 class="line-heading glow-text" style="margin:0;">
                 EPSS:
                 <a href="{{ url_for('epss_1') }}" style="text-decoration: underline; color:inherit;">Doc_1236</a>
             </h2>
         </div>
 
-        <!-- Contenedor centrado: Solo la columna izquierda -->
-        <div style="display: flex; justify-content: center;">
-            <!-- Columna izquierda: dos recuadros apilados -->
-            <div style="display: flex; flex-direction: column; gap: 30px;">
-                <!-- Recuadro superior: Descargar -->
-                <div style="text-align: center;">
-                    <div class="line-box" style="width:220px; height:130px; margin:0 auto;">
-                        Imagen
-                    </div>
-                    <div class="glow-text" style="margin-top:10px;">Descargar</div>
+        <!-- PANEL SUPERIOR: DESCARGAR/SUBIR LADO A LADO -->
+        <div 
+            id="top-panels" 
+            style="
+                display: flex; 
+                flex-wrap: wrap; 
+                justify-content: center; 
+                gap: 80px; 
+                margin-bottom: 40px;
+            "
+        >
+            <!-- Panel Izquierdo: Descargar -->
+            <div style="text-align:center;">
+                <div 
+                    class="line-box" 
+                    style="
+                        width:220px; 
+                        height:130px; 
+                        margin:0 auto; 
+                        display:flex; 
+                        align-items:center; 
+                        justify-content:center;
+                    "
+                >
+                    <!-- Imagen representativa -->
+                    Imagen
                 </div>
-                <!-- Recuadro inferior: Subir -->
-                <div style="text-align: center;">
-                    <div class="line-box" style="width:220px; height:130px; margin:0 auto;">
-                        Imagen
-                    </div>
-                    <div class="glow-text" style="margin-top:10px;">Subir</div>
+
+                <!-- Botón para descargar el archivo subido -->
+                <div style="margin-top:10px;">
+                    <button 
+                        id="downloadParamFileBtn"
+                        style="
+                            padding:8px; 
+                            background:#111;
+                            color:#fff;
+                            border:1px solid #fff;
+                            cursor:pointer;
+                            border-radius:5px;
+                            font-weight:bold;
+                        "
+                    >
+                        Descargar Control de Parámetros
+                    </button>
                 </div>
+            </div>
+
+            <!-- Panel Derecho: Subir -->
+            <div style="text-align:center;">
+                <div 
+                    class="line-box" 
+                    style="
+                        width:220px; 
+                        height:130px; 
+                        margin:0 auto; 
+                        display:flex; 
+                        align-items:center; 
+                        justify-content:center;
+                    "
+                >
+                    Imagen
+                </div>
+
+                <!-- Botón para subir archivo que se podrá descargar luego -->
+                <div style="margin-top:10px;">
+                    <label 
+                        for="uploadParamFileInput"
+                        style="
+                            display:inline-block;
+                            padding:8px; 
+                            background:#111;
+                            color:#fff;
+                            border:1px solid #fff;
+                            cursor:pointer;
+                            border-radius:5px;
+                            font-weight:bold;
+                        "
+                    >
+                        Subir Archivo
+                    </label>
+                    <input 
+                        type="file" 
+                        id="uploadParamFileInput" 
+                        style="display:none;" 
+                        accept=".pdf,.xlsx,.xls,.csv,.doc,.docx,.png,.jpg,.jpeg"
+                    >
+                </div>
+            </div>
+        </div>
+
+        <!-- SECCIÓN PARA CREAR Y SELECCIONAR CORRIDAS -->
+        <div style="margin-bottom:40px;">
+            <h3 class="line-heading glow-text" style="margin-bottom:10px;">
+                Corridas Disponibles
+            </h3>
+            <p style="margin-bottom:10px;">
+                Crea una corrida nueva o selecciona/edita/elimina una ya existente para ver sus fechas y archivos.
+            </p>
+
+            <!-- Crear Corrida -->
+            <div style="margin-bottom:15px;">
+                <label for="runNameInput" class="glow-text" style="margin-right:10px;">Nombre de Corrida:</label>
+                <input
+                    type="text"
+                    id="runNameInput"
+                    placeholder="Ej. Corrida A, Perfil X..."
+                    style="
+                        padding:5px;
+                        background:#111;
+                        border:1px solid #fff;
+                        color:#fff;
+                        border-radius:5px;
+                        outline:none;
+                        margin-right:20px;
+                        width:220px;
+                    "
+                >
+                <button
+                    id="createRunBtn"
+                    style="
+                        padding:8px;
+                        background:#111;
+                        color:#fff;
+                        border:1px solid #fff;
+                        cursor:pointer;
+                        border-radius:5px;
+                        margin-right:20px;
+                    "
+                >
+                    Crear Corrida
+                </button>
+            </div>
+
+            <!-- Seleccionar/Editar/Eliminar Corrida -->
+            <div style="margin-bottom:20px;">
+                <label for="runSelect" class="glow-text" style="margin-right:10px;">Seleccione Corrida:</label>
+                <select 
+                    id="runSelect"
+                    style="
+                        padding:5px;
+                        background:#111;
+                        border:1px solid #fff;
+                        color:#fff;
+                        border-radius:5px;
+                        outline:none;
+                        margin-right:20px;
+                        width:220px;
+                    "
+                >
+                    <option value="">-- Elige una corrida --</option>
+                </select>
+                <button
+                    id="selectRunBtn"
+                    style="
+                        padding:8px;
+                        background:#111;
+                        color:#fff;
+                        border:1px solid #fff;
+                        cursor:pointer;
+                        border-radius:5px;
+                        margin-right:10px;
+                    "
+                >
+                    Seleccionar Corrida
+                </button>
+                <button
+                    id="editRunBtn"
+                    style="
+                        padding:8px;
+                        background:#111;
+                        color:#fff;
+                        border:1px solid #fff;
+                        cursor:pointer;
+                        border-radius:5px;
+                        margin-right:10px;
+                    "
+                >
+                    Editar Corrida
+                </button>
+                <button
+                    id="deleteRunBtn"
+                    style="
+                        padding:8px;
+                        background:#111;
+                        color:#fff;
+                        border:1px solid #fff;
+                        cursor:pointer;
+                        border-radius:5px;
+                    "
+                >
+                    Eliminar Corrida
+                </button>
+            </div>
+        </div>
+
+        <!-- FORM FECHAS Y TABLA (OCULTO HASTA QUE EXISTA CORRIDA SELECCIONADA) -->
+        <div id="runSection" style="display:none; margin-bottom:40px;">
+            <h3 class="line-heading glow-text" style="margin-bottom:10px;">
+                Configuración del Perfil
+            </h3>
+            <p style="margin-bottom:10px;">
+                Elige fecha de inicio y fecha fin. Se generará o actualizará la tabla 
+                sin perder archivos previamente subidos para esta corrida.
+            </p>
+
+            <div style="margin-bottom:20px;">
+                <label for="startDateInput" class="glow-text" style="margin-right:10px;">Fecha Inicio:</label>
+                <input 
+                    type="date"
+                    id="startDateInput"
+                    style="
+                        padding:5px; 
+                        background:#111;
+                        border:1px solid #fff;
+                        color:#fff;
+                        border-radius:5px;
+                        outline:none;
+                        margin-right:20px;
+                    "
+                >
+                <label for="endDateInput" class="glow-text" style="margin-right:10px;">Fecha Fin:</label>
+                <input 
+                    type="date"
+                    id="endDateInput"
+                    style="
+                        padding:5px; 
+                        background:#111;
+                        border:1px solid #fff;
+                        color:#fff;
+                        border-radius:5px;
+                        outline:none;
+                    "
+                >
+                <button 
+                    id="generateDatesBtn"
+                    style="
+                        margin-left:10px;
+                        padding:8px; 
+                        background:#111;
+                        color:#fff;
+                        border:1px solid #fff;
+                        cursor:pointer;
+                        border-radius:5px;
+                    "
+                >
+                    Generar Rango
+                </button>
+            </div>
+
+            <!-- Tabla con bordes inferiores redondeados -->
+            <div style="overflow:hidden; border-radius:10px; border:1px solid #fff;">
+                <table 
+                    id="datesTable"
+                    style="
+                        width:100%;
+                        border-collapse: separate;
+                        border-spacing: 0;
+                        margin:0;
+                    "
+                >
+                    <thead>
+                        <tr style="background:#222;">
+                            <th class="glow-text" style="padding:8px; border:none;">Fecha</th>
+                            <th class="glow-text" style="padding:8px; border:none;">Subir Archivo</th>
+                            <th class="glow-text" style="padding:8px; border:none;">Último Archivo</th>
+                            <th class="glow-text" style="padding:8px; border:none;">Historial</th>
+                        </tr>
+                    </thead>
+                    <tbody id="datesTableBody" style="border:none;">
+                        <!-- Filas generadas dinámicamente -->
+                    </tbody>
+                </table>
             </div>
         </div>
 
@@ -57,10 +316,445 @@ Control de Parámetro 1
 </div>
 
 <script>
-    // Al cargar esta subpágina, se aplica el efecto fade-in rápido solo al contenido
-    window.addEventListener('load', function() {
-        document.getElementById('parameter1-wrapper').classList.add('fade-in-fast');
-        document.getElementById('main-header-wrapper').style.display = 'block';
+/* ----------------------------------
+   1) Al cargar, Fade-in 
+-------------------------------------*/
+window.addEventListener('load', function() {
+    document.getElementById('parameter1-wrapper').classList.add('fade-in-fast');
+    document.getElementById('main-header-wrapper').style.display = 'block';
+});
+
+/* ----------------------------------
+   2) ARCHIVO GLOBAL (descargar/subir)
+-------------------------------------*/
+let archivoGlobalParamFile = null;
+let archivoGlobalParamName = '';
+
+const uploadParamFileInput = document.getElementById('uploadParamFileInput');
+const downloadParamFileBtn = document.getElementById('downloadParamFileBtn');
+
+uploadParamFileInput.addEventListener('change', (e) => {
+    const file = e.target.files[0];
+    if (!file) return;
+    // Lee el archivo de manera silenciosa
+    const reader = new FileReader();
+    reader.onload = function(evt) {
+        archivoGlobalParamFile = evt.target.result; 
+        archivoGlobalParamName = file.name;
+        // No alerts
+    };
+    reader.readAsDataURL(file);
+});
+
+downloadParamFileBtn.addEventListener('click', () => {
+    if (!archivoGlobalParamFile) {
+        // No alert
+        return;
+    }
+    // Descargar
+    const tempLink = document.createElement('a');
+    tempLink.href = archivoGlobalParamFile;
+    tempLink.download = archivoGlobalParamName || 'Control_Param_File';
+    document.body.appendChild(tempLink);
+    tempLink.click();
+    document.body.removeChild(tempLink);
+});
+
+/* ----------------------------------
+   3) GESTIÓN DE CORRIDAS
+-------------------------------------*/
+let runsData = {}; // { "Corrida1": { startDate, endDate, records: {"YYYY-MM-DD": [{fileName, fileData, dateTime}, ...] } }, ... }
+let currentRunName = '';
+
+// DOM
+const runNameInput = document.getElementById('runNameInput');
+const createRunBtn = document.getElementById('createRunBtn');
+const runSelect = document.getElementById('runSelect');
+const selectRunBtn = document.getElementById('selectRunBtn');
+const editRunBtn = document.getElementById('editRunBtn');
+const deleteRunBtn = document.getElementById('deleteRunBtn');
+const runSection = document.getElementById('runSection');
+
+createRunBtn.addEventListener('click', () => {
+    const nameVal = runNameInput.value.trim();
+    if (!nameVal) return;
+    if (!runsData[nameVal]) {
+        runsData[nameVal] = { startDate: null, endDate: null, records: {} };
+    }
+    updateRunSelectOptions();
+    runNameInput.value = '';
+});
+
+// Seleccionar corrida
+selectRunBtn.addEventListener('click', () => {
+    const selectedVal = runSelect.value;
+    if (!selectedVal) return;
+    currentRunName = selectedVal;
+    showRunSection(currentRunName);
+});
+
+// Editar corrida
+editRunBtn.addEventListener('click', () => {
+    const selectedVal = runSelect.value;
+    if (!selectedVal) return;
+    const newName = prompt('Nuevo nombre para la corrida:', selectedVal) || '';
+    const trimmed = newName.trim();
+    if (!trimmed) return;
+    // No duplicados
+    if (runsData[trimmed] && trimmed !== selectedVal) {
+        return;
+    }
+    runsData[trimmed] = runsData[selectedVal];
+    delete runsData[selectedVal];
+    if (currentRunName === selectedVal) {
+        currentRunName = trimmed;
+    }
+    updateRunSelectOptions();
+    runSelect.value = trimmed;
+    showRunSection(trimmed);
+});
+
+// Eliminar corrida
+deleteRunBtn.addEventListener('click', () => {
+    const selectedVal = runSelect.value;
+    if (!selectedVal) return;
+    delete runsData[selectedVal];
+    if (currentRunName === selectedVal) {
+        currentRunName = '';
+        runSection.style.display = 'none';
+        document.getElementById('datesTableBody').innerHTML = '';
+        document.getElementById('datesTable').style.display = 'none';
+    }
+    updateRunSelectOptions();
+});
+
+// Actualiza el select (ordenadas por fecha de inicio)
+function updateRunSelectOptions() {
+    runSelect.innerHTML = '<option value="">-- Elige una corrida --</option>';
+    const runKeys = Object.keys(runsData);
+
+    // Ordena por startDate asc
+    runKeys.sort((a, b) => {
+        const runA = runsData[a];
+        const runB = runsData[b];
+        if (!runA.startDate && !runB.startDate) return a.localeCompare(b);
+        if (!runA.startDate) return 1;
+        if (!runB.startDate) return -1;
+        return runA.startDate.localeCompare(runB.startDate);
     });
+
+    // Muestra rango al lado
+    runKeys.forEach(runKey => {
+        const run = runsData[runKey];
+        let dateRange = '(Sin fechas)';
+        if (run.startDate && run.endDate) {
+            dateRange = `(${run.startDate} a ${run.endDate})`;
+        }
+        const opt = document.createElement('option');
+        opt.value = runKey;
+        opt.textContent = `${runKey} ${dateRange}`;
+        runSelect.appendChild(opt);
+    });
+}
+
+/* ----------------------------------
+   4) MOSTRAR/ACTUALIZAR LA TABLA
+-------------------------------------*/
+const startDateInput = document.getElementById('startDateInput');
+const endDateInput = document.getElementById('endDateInput');
+const generateDatesBtn = document.getElementById('generateDatesBtn');
+const datesTable = document.getElementById('datesTable');
+const datesTableBody = document.getElementById('datesTableBody');
+
+function showRunSection(runName) {
+    runSection.style.display = 'block';
+    const runInfo = runsData[runName];
+    if (!runInfo) return;
+    startDateInput.value = runInfo.startDate || '';
+    endDateInput.value = runInfo.endDate || '';
+
+    datesTableBody.innerHTML = '';
+    const recordDates = Object.keys(runInfo.records).sort();
+    if (recordDates.length > 0) {
+        datesTable.style.display = 'table';
+        recordDates.forEach(dateStr => addRowForDate(runName, dateStr));
+        highlightTodayIfInRange();
+    } else {
+        datesTable.style.display = 'none';
+    }
+}
+
+// Generar rango de fechas
+generateDatesBtn.addEventListener('click', () => {
+    if (!currentRunName) return;
+    const runInfo = runsData[currentRunName];
+    if (!runInfo) return;
+
+    const startVal = startDateInput.value;
+    const endVal = endDateInput.value;
+    if (!startVal || !endVal) return;
+
+    // => Forzar a "medianoche local" para evitar offset
+    const start = parseDateYMD(startVal);
+    const end = parseDateYMD(endVal);
+    if (start > end) return;
+
+    runInfo.startDate = startVal;
+    runInfo.endDate = endVal;
+
+    const newRange = getDatesInRange(start, end);
+
+    removeRowsOutside(currentRunName, newRange);
+    newRange.forEach(dateStr => {
+        if (!runInfo.records[dateStr]) {
+            runInfo.records[dateStr] = [];
+        }
+        if (!document.getElementById(`row-${currentRunName}-${dateStr}`)) {
+            addRowForDate(currentRunName, dateStr);
+        }
+    });
+    sortTableRowsAscending();
+    datesTable.style.display = 'table';
+    highlightTodayIfInRange();
+    updateRunSelectOptions();
+    runSelect.value = currentRunName;
+});
+
+/* Evitar offsets usando fecha pura (YYYY-MM-DD) => Date a medianoche local */
+function parseDateYMD(ymd) {
+    const [y,m,d] = ymd.split('-').map(n => parseInt(n, 10));
+    return new Date(y, m-1, d); 
+}
+
+function getDatesInRange(start, end) {
+    let current = new Date(start.getTime()); 
+    const range = [];
+    while (current <= end) {
+        const yyyy = current.getFullYear();
+        const mm = String(current.getMonth() + 1).padStart(2,'0');
+        const dd = String(current.getDate()).padStart(2,'0');
+        range.push(`${yyyy}-${mm}-${dd}`);
+        current.setDate(current.getDate() + 1);
+    }
+    return range;
+}
+
+function removeRowsOutside(runName, newRange) {
+    const rows = [...datesTableBody.querySelectorAll('tr')];
+    rows.forEach(row => {
+        const splitted = row.id.split('-'); 
+        // row-runName-YYYY-MM-DD
+        const rowRun = splitted[1];
+        const datePart = splitted.slice(2).join('-');
+        if (rowRun === runName && !newRange.includes(datePart)) {
+            datesTableBody.removeChild(row);
+        }
+    });
+}
+
+function addRowForDate(runName, dateStr) {
+    const runInfo = runsData[runName];
+    if (!runInfo) return;
+
+    const tr = document.createElement('tr');
+    tr.id = `row-${runName}-${dateStr}`;
+
+    // FECHA
+    const tdFecha = document.createElement('td');
+    tdFecha.style.padding = '8px';
+    tdFecha.style.border = 'none';
+    tdFecha.innerHTML = `<span class="glow-text">${dateStr}</span>`;
+    tr.appendChild(tdFecha);
+
+    // SUBIR
+    const tdSubir = document.createElement('td');
+    tdSubir.style.padding = '8px';
+    tdSubir.style.border = 'none';
+    tdSubir.style.textAlign = 'center';
+
+    const fileInput = document.createElement('input');
+    fileInput.type = 'file';
+    fileInput.accept = '.pdf,.xlsx,.xls,.csv,.doc,.docx,.png,.jpg,.jpeg';
+    fileInput.style.display = 'none';
+    fileInput.onchange = (e) => handleDayFileUpload(e, runName, dateStr);
+
+    const uploadBtn = document.createElement('button');
+    uploadBtn.textContent = 'Subir Archivo';
+    uploadBtn.style.padding = '6px';
+    uploadBtn.style.background = '#111';
+    uploadBtn.style.color = '#fff';
+    uploadBtn.style.border = '1px solid #fff';
+    uploadBtn.style.cursor = 'pointer';
+    uploadBtn.onclick = () => fileInput.click();
+
+    tdSubir.appendChild(uploadBtn);
+    tdSubir.appendChild(fileInput);
+    tr.appendChild(tdSubir);
+
+    // ULTIMO ARCHIVO
+    const tdUltimo = document.createElement('td');
+    tdUltimo.style.padding = '8px';
+    tdUltimo.style.border = 'none';
+    tdUltimo.style.textAlign = 'center';
+
+    const existing = runInfo.records[dateStr] || [];
+    if (existing.length > 0) {
+        const last = existing[existing.length - 1];
+        tdUltimo.innerHTML = `
+            <a 
+                href="${last.fileData}" 
+                download="${last.fileName}"
+                style="color:#fff; text-decoration:underline;"
+            >
+                ${last.fileName}
+            </a>
+            <br>
+            <small style="color:#ccc;">${last.dateTime}</small>
+        `;
+    } else {
+        tdUltimo.innerHTML = '<span style="color:#bbb;">(ninguno)</span>';
+    }
+    tr.appendChild(tdUltimo);
+
+    // HISTORIAL
+    const tdHist = document.createElement('td');
+    tdHist.style.padding = '8px';
+    tdHist.style.border = 'none';
+    tdHist.style.textAlign = 'center';
+
+    const histBtn = document.createElement('button');
+    histBtn.textContent = 'Ver Historial';
+    histBtn.style.padding = '6px';
+    histBtn.style.background = '#111';
+    histBtn.style.color = '#fff';
+    histBtn.style.border = '1px solid #fff';
+    histBtn.style.cursor = 'pointer';
+    histBtn.onclick = () => showHistory(runName, dateStr);
+
+    tdHist.appendChild(histBtn);
+    tr.appendChild(tdHist);
+
+    datesTableBody.appendChild(tr);
+}
+
+function handleDayFileUpload(e, runName, dateStr) {
+    const file = e.target.files[0];
+    if (!file) return;
+    const now = new Date();
+    const dateTime = now.toLocaleString();
+    const reader = new FileReader();
+    reader.onload = function(evt) {
+        const fileDataUrl = evt.target.result;
+        const runInfo = runsData[runName];
+        if (!runInfo.records[dateStr]) {
+            runInfo.records[dateStr] = [];
+        }
+        runInfo.records[dateStr].push({
+            fileName: file.name,
+            fileData: fileDataUrl,
+            dateTime: dateTime
+        });
+        updateLastFileCell(runName, dateStr);
+        // No alert
+    };
+    reader.readAsDataURL(file);
+}
+
+function updateLastFileCell(runName, dateStr) {
+    const runInfo = runsData[runName];
+    if (!runInfo) return;
+    const tr = document.getElementById(`row-${runName}-${dateStr}`);
+    if (!tr) return;
+    const tdUltimo = tr.children[2];
+    const uploads = runInfo.records[dateStr];
+    if (!uploads || uploads.length === 0) {
+        tdUltimo.innerHTML = '<span style="color:#bbb;">(ninguno)</span>';
+        return;
+    }
+    const last = uploads[uploads.length - 1];
+    tdUltimo.innerHTML = `
+        <a 
+            href="${last.fileData}" 
+            download="${last.fileName}"
+            style="color:#fff; text-decoration:underline;"
+        >
+            ${last.fileName}
+        </a>
+        <br>
+        <small style="color:#ccc;">${last.dateTime}</small>
+    `;
+}
+
+function showHistory(runName, dateStr) {
+    const runInfo = runsData[runName];
+    if (!runInfo) return;
+    const uploads = runInfo.records[dateStr] || [];
+    if (uploads.length === 0) {
+        // Silencio
+        return;
+    }
+    let html = `<h3>Historial de archivos - ${dateStr} (Corrida: ${runName})</h3><ul>`;
+    uploads.forEach(item => {
+        html += `
+            <li>
+                <a
+                    href="${item.fileData}"
+                    download="${item.fileName}"
+                    style="color:#000; text-decoration:underline;"
+                >
+                    ${item.fileName}
+                </a>
+                <small> (${item.dateTime})</small>
+            </li>
+        `;
+    });
+    html += '</ul>';
+
+    const histWindow = window.open('', '', 'width=600,height=400');
+    histWindow.document.write(`
+        <html>
+        <head>
+            <title>Historial de ${dateStr}</title>
+        </head>
+        <body style="font-family:Arial; background:#f0f0f0; color:#000;">
+            ${html}
+        </body>
+        </html>
+    `);
+    histWindow.document.close();
+    histWindow.focus();
+}
+
+// Destaca en la tabla la fecha de hoy, si existe
+function highlightTodayIfInRange() {
+    const now = new Date();
+    const yyyy = now.getFullYear();
+    const mm = String(now.getMonth()+1).padStart(2,'0');
+    const dd = String(now.getDate()).padStart(2,'0');
+    const todayStr = `${yyyy}-${mm}-${dd}`;
+
+    const rows = datesTableBody.querySelectorAll('tr');
+    rows.forEach(row => {
+        if (row.id.endsWith(`-${todayStr}`)) {
+            row.style.backgroundColor = '#222';
+            row.style.outline = '2px solid #FFF';
+        } else {
+            row.style.backgroundColor = '';
+            row.style.outline = '';
+        }
+    });
+}
+
+// Ordena filas en orden ascendente por fecha
+function sortTableRowsAscending() {
+    const rowsArray = Array.from(datesTableBody.querySelectorAll('tr'));
+    rowsArray.sort((a, b) => {
+        // row-runName-YYYY-MM-DD
+        const dateA = a.id.split('-').slice(2).join('-');
+        const dateB = b.id.split('-').slice(2).join('-');
+        return dateA.localeCompare(dateB);
+    });
+    rowsArray.forEach(row => datesTableBody.appendChild(row));
+}
 </script>
 {% endblock %}
