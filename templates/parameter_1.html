@@ -10,6 +10,177 @@ Control de Parámetro 1
 input[type="date"]::-webkit-calendar-picker-indicator {
     filter: invert(100%);
 }
+
+/* Blinking circles (Activa/Programada/Finalizada) */
+.blink-green {
+  display: inline-block;
+  width: 10px;
+  height: 10px;
+  background-color: green;
+  border-radius: 50%;
+  margin-left: 5px;
+  animation: blinkGreen 1s infinite;
+}
+@keyframes blinkGreen {
+  0%, 100% { opacity: 1; }
+  50% { opacity: 0; }
+}
+.blink-yellow {
+  display: inline-block;
+  width: 10px;
+  height: 10px;
+  background-color: yellow;
+  border-radius: 50%;
+  margin-left: 5px;
+  animation: blinkYellow 0.3s infinite;
+}
+@keyframes blinkYellow {
+  0%, 100% { opacity: 1; }
+  50% { opacity: 0; }
+}
+.blink-red {
+  display: inline-block;
+  width: 10px;
+  height: 10px;
+  background-color: red;
+  border-radius: 50%;
+  margin-left: 5px;
+  animation: blinkRed 2s infinite;
+}
+@keyframes blinkRed {
+  0%, 100% { opacity: 1; }
+  50% { opacity: 0; }
+}
+
+/* Botones con glow */
+.button-green {
+  background: green;
+  color: #fff;
+  border: 1px solid #fff;
+  padding: 8px 12px;
+  border-radius: 5px;
+  font-weight: bold;
+  cursor: pointer;
+  text-shadow: 0 0 5px #fff;
+}
+.button-red {
+  background: red;
+  color: #fff;
+  border: 1px solid #fff;
+  padding: 8px 12px;
+  border-radius: 5px;
+  font-weight: bold;
+  cursor: pointer;
+  text-shadow: 0 0 5px #fff;
+}
+.button-yellow {
+  background: #b8860b; /* amarillo oscuro */
+  color: #fff;
+  border: 1px solid #fff;
+  padding: 8px 12px;
+  border-radius: 5px;
+  font-weight: bold;
+  cursor: pointer;
+  text-shadow: 0 0 5px #fff;
+}
+.button-blue {
+  background: #1e90ff; /* azul */
+  color: #fff;
+  border: 1px solid #fff;
+  padding: 8px 12px;
+  border-radius: 5px;
+  font-weight: bold;
+  cursor: pointer;
+  text-shadow: 0 0 5px #fff;
+}
+
+/* Panel emergente con scroll y buscador */
+#runPanelContainer {
+  margin-top: 10px;
+  position: relative;
+}
+#runPanel {
+  display: none;
+  position: absolute;
+  background: rgba(0,0,0,0.95);
+  border: 1px solid #fff;
+  border-radius: 5px;
+  padding: 10px;
+  z-index: 999;
+  width: auto;
+  min-width: 280px;
+  max-height: 220px;
+  overflow-y: auto;
+  overflow-x: visible;
+}
+#runsSearchInput {
+  width: 100%;
+  margin-bottom: 10px;
+  padding: 5px;
+  border: 1px solid #fff;
+  border-radius: 5px;
+  background: #111;
+  color: #fff;
+  box-sizing: border-box;
+}
+#runsList {
+  border: 1px solid #fff;
+  border-radius: 5px;
+  padding: 5px;
+  box-sizing: border-box;
+}
+.run-item {
+  cursor: pointer;
+  margin: 5px 0;
+  padding: 4px 8px;
+  border-radius: 3px;
+  transition: background-color 0.2s;
+  white-space: nowrap;
+  box-sizing: border-box;
+}
+.run-item:hover {
+  background: rgba(255,255,255,0.1);
+}
+
+/* Evitar que la información de la corrida seleccionada se divida en dos líneas */
+#selectedRunDisplay {
+  white-space: nowrap;
+}
+
+/* ===== MODAL para Historial de archivos ===== */
+#historyModalOverlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background: rgba(0,0,0,0.7);
+  display: none;
+  z-index: 9999;
+}
+#historyModal {
+  background: #f0f0f0;
+  color: #000;
+  border-radius: 5px;
+  width: 500px;
+  max-width: 90%;
+  max-height: 80%;
+  overflow-y: auto;
+  padding: 20px;
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+}
+#closeHistoryBtn {
+  float: right;
+  cursor: pointer;
+  font-weight: bold;
+  background: #aaa;
+  border: none;
+  padding: 5px 8px;
+  border-radius: 3px;
+}
 </style>
 
 <div id="parameter1-wrapper" style="opacity:0;">
@@ -38,48 +209,16 @@ input[type="date"]::-webkit-calendar-picker-indicator {
         </div>
 
         <!-- PANEL SUPERIOR: DESCARGAR/SUBIR LADO A LADO -->
-        <div 
-            id="top-panels" 
-            style="
-                display: flex; 
-                flex-wrap: wrap; 
-                justify-content: center; 
-                gap: 80px; 
-                margin-bottom: 40px;
-            "
-        >
+        <div id="top-panels" style="display: flex; flex-wrap: wrap; justify-content: center; gap: 80px; margin-bottom: 40px;">
             <!-- Panel Izquierdo: Descargar -->
             <div style="text-align:center;">
-                <div 
-                    class="line-box" 
-                    style="
-                        width:220px; 
-                        height:130px; 
-                        margin:0 auto; 
-                        display:flex; 
-                        align-items:center; 
-                        justify-content:center;
-                        font-size: 1rem; /* <- AQUÍ */
-                    "
-                >
-                    <!-- Imagen representativa -->
+                <div class="line-box" style="width:220px; height:130px; margin:0 auto; display:flex; align-items:center; justify-content:center; font-size: 1rem;">
                     Imagen
                 </div>
-
-                <!-- Botón para descargar el archivo subido -->
                 <div style="margin-top:10px;">
                     <button 
-                        id="downloadParamFileBtn"
-                        style="
-                            padding:8px; 
-                            background:#111;
-                            color:#fff;
-                            border:1px solid #fff;
-                            cursor:pointer;
-                            border-radius:5px;
-                            font-weight:bold;
-                            font-size: 1rem; /* <- AQUÍ */
-                        "
+                        id="downloadParamFileBtn" 
+                        style="padding:8px; background:#111; color:#fff; border:1px solid #fff; cursor:pointer; border-radius:5px; font-weight:bold; font-size:1rem;"
                     >
                         Descargar Control de Parámetros
                     </button>
@@ -88,34 +227,13 @@ input[type="date"]::-webkit-calendar-picker-indicator {
 
             <!-- Panel Derecho: Subir -->
             <div style="text-align:center;">
-                <div 
-                    class="line-box" 
-                    style="
-                        width:220px; 
-                        height:130px; 
-                        margin:0 auto; 
-                        display:flex; 
-                        align-items:center; 
-                        justify-content:center;
-                    "
-                >
+                <div class="line-box" style="width:220px; height:130px; margin:0 auto; display:flex; align-items:center; justify-content:center;">
                     Imagen
                 </div>
-
-                <!-- Botón para subir archivo que se podrá descargar luego -->
                 <div style="margin-top:10px;">
                     <label 
-                        for="uploadParamFileInput"
-                        style="
-                            display:inline-block;
-                            padding:8px; 
-                            background:#111;
-                            color:#fff;
-                            border:1px solid #fff;
-                            cursor:pointer;
-                            border-radius:5px;
-                            font-weight:bold;
-                        "
+                        for="uploadParamFileInput" 
+                        style="display:inline-block; padding:8px; background:#111; color:#fff; border:1px solid #fff; cursor:pointer; border-radius:5px; font-weight:bold;"
                     >
                         Subir Nuevo Control de Parámetros
                     </label>
@@ -131,9 +249,7 @@ input[type="date"]::-webkit-calendar-picker-indicator {
 
         <!-- SECCIÓN PARA CREAR Y SELECCIONAR CORRIDAS -->
         <div style="margin-bottom:40px;">
-            <h3 class="line-heading glow-text" style="margin-bottom:10px;">
-                Corridas Disponibles
-            </h3>
+            <h3 class="line-heading glow-text" style="margin-bottom:10px;">Corridas Disponibles</h3>
             <p style="margin-bottom:10px;">
                 Crea una corrida nueva o selecciona/edita/elimina una ya existente para ver sus fechas y archivos.
             </p>
@@ -141,194 +257,163 @@ input[type="date"]::-webkit-calendar-picker-indicator {
             <!-- Crear Corrida -->
             <div style="margin-bottom:15px;">
                 <label for="runNameInput" class="glow-text" style="margin-right:10px;">Nombre de Corrida:</label>
-                <input
-                    type="text"
-                    id="runNameInput"
-                    placeholder="Ej. Corrida A, Perfil X..."
-                    style="
-                        padding:5px;
-                        background:#111;
-                        border:1px solid #fff;
-                        color:#fff;
-                        border-radius:5px;
-                        outline:none;
-                        margin-right:20px;
-                        width:220px;
-                    "
+                <input 
+                    type="text" 
+                    id="runNameInput" 
+                    placeholder="Ej. Corrida A, Perfil X..." 
+                    style="padding:5px; background:#111; border:1px solid #fff; color:#fff; border-radius:5px; outline:none; margin-right:20px; width:220px;"
                 >
-                <button
-                    id="createRunBtn"
-                    style="
-                        padding:8px;
-                        background:#111;
-                        color:#fff;
-                        border:1px solid #fff;
-                        cursor:pointer;
-                        border-radius:5px;
-                        margin-right:20px;
-                    "
+                <button 
+                    id="createRunBtn" 
+                    style="padding:8px; background:#111; color:#fff; border:1px solid #fff; cursor:pointer; border-radius:5px; margin-right:20px;"
                 >
                     Crear Corrida
                 </button>
             </div>
 
-            <!-- Seleccionar/Editar/Eliminar Corrida -->
-            <div style="margin-bottom:20px;">
-                <label for="runSelect" class="glow-text" style="margin-right:10px;">Seleccione Corrida:</label>
-                <select 
-                    id="runSelect"
-                    style="
-                        padding:5px;
-                        background:#111;
-                        border:1px solid #fff;
-                        color:#fff;
-                        border-radius:5px;
-                        outline:none;
-                        margin-right:20px;
-                        width:220px;
-                    "
+            <div style="margin-bottom:20px;" id="runPanelContainer">
+                <button 
+                    id="openPanelBtn" 
+                    style="padding:8px; background:#111; color:#fff; border:1px solid #fff; cursor:pointer; border-radius:5px; margin-right:10px;"
                 >
-                    <option value="">-- Elige una corrida --</option>
-                </select>
-                <button
-                    id="selectRunBtn"
-                    style="
-                        padding:8px;
-                        background:#111;
-                        color:#fff;
-                        border:1px solid #fff;
-                        cursor:pointer;
-                        border-radius:5px;
-                        margin-right:10px;
-                    "
-                >
-                    Seleccionar Corrida
+                    Abrir Lista de Corridas
                 </button>
-                <button
-                    id="editRunBtn"
-                    style="
-                        padding:8px;
-                        background:#111;
-                        color:#fff;
-                        border:1px solid #fff;
-                        cursor:pointer;
-                        border-radius:5px;
-                        margin-right:10px;
-                    "
+
+                <div id="runPanel">
+                    <input 
+                        type="text" 
+                        id="runsSearchInput" 
+                        placeholder="Buscar Corrida..." 
+                    />
+                    <div id="runsList"></div>
+                </div>
+
+                <div id="selectedRunDisplay" style="display:inline-block; padding:8px; background:#111; color:#fff; border:1px solid #fff; border-radius:5px; margin-left:10px;">
+                    No se ha seleccionado corrida
+                </div>
+                <button 
+                    id="editRunBtn" 
+                    style="padding:8px; background:#111; color:#fff; border:1px solid #fff; cursor:pointer; border-radius:5px; margin-left:10px;"
                 >
                     Editar Corrida
                 </button>
-                <button
-                    id="deleteRunBtn"
-                    style="
-                        padding:8px;
-                        background:#111;
-                        color:#fff;
-                        border:1px solid #fff;
-                        cursor:pointer;
-                        border-radius:5px;
-                    "
+                <button 
+                    id="deleteRunBtn" 
+                    style="padding:8px; background:#111; color:#fff; border:1px solid #fff; cursor:pointer; border-radius:5px; margin-left:10px;"
                 >
                     Eliminar Corrida
                 </button>
             </div>
         </div>
 
-        <!-- FORM FECHAS Y TABLA (OCULTO HASTA QUE EXISTA CORRIDA SELECCIONADA) -->
+        <!-- FORM FECHAS Y TABLA (OCULTO HASTA QUE SE SELECCIONE UNA CORRIDA) -->
         <div id="runSection" style="display:none; margin-bottom:40px;">
             <h3 class="line-heading glow-text" style="margin-bottom:10px;">
                 Configuración del Perfil
             </h3>
             <p style="margin-bottom:10px;">
-                Elige fecha de inicio y fecha fin. Se generará o actualizará la tabla 
-                sin perder archivos previamente subidos para esta corrida.
+                Elige fecha de inicio y fecha fin. Se generará o actualizará la tabla sin perder archivos previamente subidos para esta corrida.
             </p>
 
-            <div style="margin-bottom:20px;">
-                <label for="startDateInput" class="glow-text" style="margin-right:10px;">Fecha Inicio:</label>
-                <input 
-                    type="date"
-                    id="startDateInput"
-                    style="
-                        padding:5px; 
-                        background:#111;
-                        border:1px solid #fff;
-                        color:#fff;
-                        border-radius:5px;
-                        outline:none;
-                        margin-right:20px;
-                    "
-                >
-                <label for="endDateInput" class="glow-text" style="margin-right:10px;">Fecha Fin:</label>
-                <input 
-                    type="date"
-                    id="endDateInput"
-                    style="
-                        padding:5px; 
-                        background:#111;
-                        border:1px solid #fff;
-                        color:#fff;
-                        border-radius:5px;
-                        outline:none;
-                    "
-                >
-                <button 
-                    id="generateDatesBtn"
-                    style="
-                        margin-left:10px;
-                        padding:8px; 
-                        background:#111;
-                        color:#fff;
-                        border:1px solid #fff;
-                        cursor:pointer;
-                        border-radius:5px;
-                    "
-                >
-                    Generar Rango
+            <!-- Botones "Generar Rango" y al lado "← R" y "D →" -->
+            <div style="display: flex; gap: 10px; align-items:center; margin-bottom: 10px;">
+                <div style="display:flex; gap:20px; align-items:center;">
+                    <label for="startDateInput" class="glow-text">Fecha Inicio:</label>
+                    <input 
+                        type="date" 
+                        id="startDateInput" 
+                        style="padding:5px; background:#111; border:1px solid #fff; color:#fff; border-radius:5px; outline:none; width:220px;"
+                    >
+                    <label for="endDateInput" class="glow-text">Fecha Fin:</label>
+                    <input 
+                        type="date" 
+                        id="endDateInput" 
+                        style="padding:5px; background:#111; border:1px solid #fff; color:#fff; border-radius:5px; outline:none; width:220px;"
+                    >
+                    <button 
+                        id="generateDatesBtn" 
+                        style="padding:8px; background:#111; color:#fff; border:1px solid #fff; cursor:pointer; border-radius:5px;"
+                    >
+                        Generar Rango
+                    </button>
+                </div>
+                <!-- Botones de Undo (← R) y Redo (D →) siempre visibles -->
+                <button id="undoBtn" style="padding:8px; background:#111; color:#fff; border:1px solid #fff; cursor:pointer; border-radius:5px;">
+                    ← R
                 </button>
+                <button id="redoBtn" style="padding:8px; background:#111; color:#fff; border:1px solid #fff; cursor:pointer; border-radius:5px;">
+                    D →
+                </button>
+
+                <!-- Indicador de estado (Act/Prog/Fin) -->
+                <div id="statusIndicator" style="text-align:right; flex:1;"></div>
             </div>
 
-            <!-- Tabla con bordes inferiores redondeados -->
-            <div style="overflow:hidden; border-radius:10px; border:1px solid #fff;">
+            <hr style="border: 1px solid #fff; margin-bottom: 20px;">
+
+            <div style="overflow:hidden; margin-bottom:20px;">
                 <table 
-                    id="datesTable"
+                    id="datesTable" 
                     style="
-                        width:100%;
-                        border-collapse: separate;
-                        border-spacing: 0;
+                        width:100%; 
                         margin:0;
+                        border:1px solid #fff; 
+                        border-radius:10px; 
+                        border-collapse:separate; 
+                        border-spacing:0;
                     "
                 >
                     <thead>
                         <tr style="background:#222;">
-                            <th class="glow-text" style="padding:8px; border:none;">Fecha</th>
+                            <th class="glow-text" style="padding:8px; border:none; border-top-left-radius:10px;">Fecha</th>
                             <th class="glow-text" style="padding:8px; border:none;">Subir Archivo</th>
                             <th class="glow-text" style="padding:8px; border:none;">Último Archivo</th>
-                            <th class="glow-text" style="padding:8px; border:none;">Historial</th>
+                            <th class="glow-text" style="padding:8px; border:none; border-top-right-radius:10px;">Historial</th>
                         </tr>
-                    </thead>
+                    </thead>              
                     <tbody id="datesTableBody" style="border:none;">
                         <!-- Filas generadas dinámicamente -->
                     </tbody>
                 </table>
             </div>
-        </div>
 
+            <div id="mainActionButtonArea" style="margin-bottom:20px;"></div>
+            
+            <div id="twoButtonsArea" style="display:none; width:100%; margin-bottom:20px;">
+                <div style="display:flex; justify-content:space-between; align-items:flex-start;">
+                    <div style="display:flex; flex-direction:column; gap:10px;">
+                        <button id="reanudarBtn" class="button-yellow">Reanudar</button>
+                        <button id="enviarBtn" class="button-blue">Enviar datos</button>
+                    </div>
+                    <div style="margin-left:20px;">
+                        <img src="" alt="Imagen vacía" style="width:50px; height:50px; border:1px solid #fff;">
+                    </div>
+                </div>
+            </div>
+        </div>
     </div>
 </div>
 
+<!-- MODAL PARA HISTORIAL DE ARCHIVOS -->
+<div id="historyModalOverlay">
+  <div id="historyModal">
+    <button id="closeHistoryBtn">Cerrar</button>
+    <div id="historyContent"></div>
+  </div>
+</div>
+
 <script>
-/* ----------------------------------
-   1) Al cargar, Fade-in 
--------------------------------------*/
+/* ==============================
+   1) ANIMACIÓN FADE-IN
+============================== */
 window.addEventListener('load', function() {
     document.getElementById('parameter1-wrapper').classList.add('fade-in-fast');
     document.getElementById('main-header-wrapper').style.display = 'block';
 });
 
-/* ----------------------------------
-   2) ARCHIVO GLOBAL (descargar/subir)
--------------------------------------*/
+/* ==============================
+   2) ARCHIVO GLOBAL
+============================== */
 let archivoGlobalParamFile = null;
 let archivoGlobalParamName = '';
 
@@ -336,24 +421,20 @@ const uploadParamFileInput = document.getElementById('uploadParamFileInput');
 const downloadParamFileBtn = document.getElementById('downloadParamFileBtn');
 
 uploadParamFileInput.addEventListener('change', (e) => {
+    pushHistory(); // Acción individual
     const file = e.target.files[0];
     if (!file) return;
-    // Lee el archivo de manera silenciosa
     const reader = new FileReader();
     reader.onload = function(evt) {
         archivoGlobalParamFile = evt.target.result; 
         archivoGlobalParamName = file.name;
-        // No alerts
+        saveHistoryAfterAction();
     };
     reader.readAsDataURL(file);
 });
 
 downloadParamFileBtn.addEventListener('click', () => {
-    if (!archivoGlobalParamFile) {
-        // No alert
-        return;
-    }
-    // Descargar
+    if (!archivoGlobalParamFile) return;
     const tempLink = document.createElement('a');
     tempLink.href = archivoGlobalParamFile;
     tempLink.download = archivoGlobalParamName || 'Control_Param_File';
@@ -362,398 +443,666 @@ downloadParamFileBtn.addEventListener('click', () => {
     document.body.removeChild(tempLink);
 });
 
-/* ----------------------------------
+/* ==============================
    3) GESTIÓN DE CORRIDAS
--------------------------------------*/
-let runsData = {}; // { "Corrida1": { startDate, endDate, records: {"YYYY-MM-DD": [{fileName, fileData, dateTime}, ...] } }, ... }
+============================== */
+let runsData = {};
 let currentRunName = '';
+let createdRuns = [];
+let creationCounter = 0;
 
-// DOM
 const runNameInput = document.getElementById('runNameInput');
 const createRunBtn = document.getElementById('createRunBtn');
-const runSelect = document.getElementById('runSelect');
-const selectRunBtn = document.getElementById('selectRunBtn');
+
+const runPanel = document.getElementById('runPanel');
+const openPanelBtn = document.getElementById('openPanelBtn');
+const runsSearchInput = document.getElementById('runsSearchInput');
+const runsList = document.getElementById('runsList');
+
+const selectedRunDisplay = document.getElementById('selectedRunDisplay');
 const editRunBtn = document.getElementById('editRunBtn');
 const deleteRunBtn = document.getElementById('deleteRunBtn');
+
 const runSection = document.getElementById('runSection');
 
-createRunBtn.addEventListener('click', () => {
-    const nameVal = runNameInput.value.trim();
-    if (!nameVal) return;
-    if (!runsData[nameVal]) {
-        runsData[nameVal] = { startDate: null, endDate: null, records: {} };
-    }
-    updateRunSelectOptions();
-    runNameInput.value = '';
-});
+/* UNDO / REDO HISTORY */
+let historyStack = [];   
+let historyPointer = -1; 
 
-// Seleccionar corrida
-selectRunBtn.addEventListener('click', () => {
-    const selectedVal = runSelect.value;
-    if (!selectedVal) return;
-    currentRunName = selectedVal;
+function cloneDeep(obj) {
+  return JSON.parse(JSON.stringify(obj));
+}
+
+/* Guardar estado actual antes de cambiar */
+function pushHistory() {
+  // Si estábamos en la mitad de la pila y hacemos una nueva acción, recortamos
+  if (historyPointer < historyStack.length - 1) {
+    historyStack.splice(historyPointer + 1);
+  }
+
+  const snapshot = {
+    runsData: cloneDeep(runsData),
+    currentRunName: currentRunName,
+    manualState: manualState,
+    archivoGlobalParamFile: archivoGlobalParamFile,
+    archivoGlobalParamName: archivoGlobalParamName
+  };
+  historyStack.push(snapshot);
+  historyPointer = historyStack.length - 1;
+}
+
+/* Actualizar la entrada actual con la versión final tras la acción */
+function saveHistoryAfterAction() {
+  if (historyPointer < 0) return;
+  // Eliminar "redos" potenciales
+  if (historyPointer < historyStack.length - 1) {
+    historyStack.splice(historyPointer + 1);
+  }
+  const snapshot = {
+    runsData: cloneDeep(runsData),
+    currentRunName: currentRunName,
+    manualState: manualState,
+    archivoGlobalParamFile: archivoGlobalParamFile,
+    archivoGlobalParamName: archivoGlobalParamName
+  };
+  historyStack[historyPointer] = snapshot;
+}
+
+/* Undo */
+function undoAction() {
+  if (historyPointer <= 0) return; 
+  historyPointer--;
+  restoreFromHistory();
+}
+
+/* Redo */
+function redoAction() {
+  if (historyPointer >= historyStack.length - 1) return;
+  historyPointer++;
+  restoreFromHistory();
+}
+
+/* Restaura todo desde snapshot */
+function restoreFromHistory() {
+  if (historyPointer < 0 || historyPointer >= historyStack.length) return;
+  const snap = historyStack[historyPointer];
+  runsData = cloneDeep(snap.runsData);
+  currentRunName = snap.currentRunName;
+  manualState = snap.manualState;
+  archivoGlobalParamFile = snap.archivoGlobalParamFile;
+  archivoGlobalParamName = snap.archivoGlobalParamName;
+
+  // Re-render
+  if (!currentRunName) {
+    selectedRunDisplay.innerHTML = 'No se ha seleccionado corrida';
+    runSection.style.display = 'none';
+    datesTableBody.innerHTML = '';
+    datesTable.style.display = 'none';
+  } else {
+    selectedRunDisplay.innerHTML = currentRunName + formatDateRange(runsData[currentRunName]);
     showRunSection(currentRunName);
+  }
+  updateStatusIndicator();
+  updateMainButtonArea();
+}
+
+/* BOTONES UNDO/REDO */
+const undoBtn = document.getElementById('undoBtn');
+const redoBtn = document.getElementById('redoBtn');
+undoBtn.addEventListener('click', undoAction);
+redoBtn.addEventListener('click', redoAction);
+
+/* Crear Corrida */
+createRunBtn.addEventListener('click', () => {
+    pushHistory(); 
+    const nameVal = runNameInput.value.trim();
+    if (!nameVal) {
+      restoreFromHistory();
+      return;
+    }
+    if (!runsData[nameVal]) {
+        runsData[nameVal] = {
+          startDate: null,
+          endDate: null,
+          records: {},
+          creationOrderIndex: creationCounter++
+        };
+        createdRuns.push(nameVal);
+    }
+    runNameInput.value = '';
+    saveHistoryAfterAction(); 
+    updateRunPanelList();
 });
 
-// Editar corrida
-editRunBtn.addEventListener('click', () => {
-    const selectedVal = runSelect.value;
-    if (!selectedVal) return;
-    const newName = prompt('Nuevo nombre para la corrida:', selectedVal) || '';
-    const trimmed = newName.trim();
-    if (!trimmed) return;
-    // No duplicados
-    if (runsData[trimmed] && trimmed !== selectedVal) {
-        return;
+openPanelBtn.addEventListener('click', () => {
+    if (runPanel.style.display === 'none' || !runPanel.style.display) {
+        runPanel.style.display = 'block';
+        updateRunPanelList();
+    } else {
+        runPanel.style.display = 'none';
     }
-    runsData[trimmed] = runsData[selectedVal];
-    delete runsData[selectedVal];
-    if (currentRunName === selectedVal) {
-        currentRunName = trimmed;
-    }
-    updateRunSelectOptions();
-    runSelect.value = trimmed;
-    showRunSection(trimmed);
 });
 
-// Eliminar corrida
-deleteRunBtn.addEventListener('click', () => {
-    const selectedVal = runSelect.value;
-    if (!selectedVal) return;
-    delete runsData[selectedVal];
-    if (currentRunName === selectedVal) {
-        currentRunName = '';
-        runSection.style.display = 'none';
-        document.getElementById('datesTableBody').innerHTML = '';
-        document.getElementById('datesTable').style.display = 'none';
-    }
-    updateRunSelectOptions();
-});
+runsSearchInput.addEventListener('input', updateRunPanelList);
 
-// Actualiza el select (ordenadas por fecha de inicio)
-function updateRunSelectOptions() {
-    runSelect.innerHTML = '<option value="">-- Elige una corrida --</option>';
-    const runKeys = Object.keys(runsData);
-
-    // Ordena por startDate asc
-    runKeys.sort((a, b) => {
-        const runA = runsData[a];
-        const runB = runsData[b];
-        if (!runA.startDate && !runB.startDate) return a.localeCompare(b);
-        if (!runA.startDate) return 1;
-        if (!runB.startDate) return -1;
-        return runA.startDate.localeCompare(runB.startDate);
+function updateRunPanelList() {
+    runsList.innerHTML = '';
+    const filterVal = runsSearchInput.value.toLowerCase();
+    let filtered = createdRuns.filter(runName => runName.toLowerCase().includes(filterVal));
+    // Ordenar por fecha fin (desc)
+    filtered.sort((a, b) => {
+        let endA = runsData[a].endDate ? new Date(runsData[a].endDate) : new Date(0);
+        let endB = runsData[b].endDate ? new Date(runsData[b].endDate) : new Date(0);
+        return endB - endA;
     });
-
-    // Muestra rango al lado
-    runKeys.forEach(runKey => {
-        const run = runsData[runKey];
-        let dateRange = '(Sin fechas)';
-        if (run.startDate && run.endDate) {
-            dateRange = `(${run.startDate} a ${run.endDate})`;
-        }
-        const opt = document.createElement('option');
-        opt.value = runKey;
-        opt.textContent = `${runKey} ${dateRange}`;
-        runSelect.appendChild(opt);
+    filtered.forEach(runName => {
+        const item = document.createElement('div');
+        item.className = 'run-item glow-text';
+        item.textContent = runName + formatDateRange(runsData[runName]);
+        item.onclick = () => {
+            selectRunInList(runName);
+            runPanel.style.display = 'none';
+        };
+        runsList.appendChild(item);
     });
 }
 
-/* ----------------------------------
-   4) MOSTRAR/ACTUALIZAR LA TABLA
--------------------------------------*/
-const startDateInput = document.getElementById('startDateInput');
-const endDateInput = document.getElementById('endDateInput');
-const generateDatesBtn = document.getElementById('generateDatesBtn');
+function selectRunInList(runName) {
+    currentRunName = runName;
+    selectedRunDisplay.innerHTML = runName + formatDateRange(runsData[runName]);
+    showRunSection(runName);
+}
+
+/* Editar Corrida */
+editRunBtn.addEventListener('click', () => {
+    if (!currentRunName) return;
+    pushHistory();
+    const newName = prompt('Nuevo nombre para la corrida:', currentRunName) || '';
+    const trimmed = newName.trim();
+    if (!trimmed) {
+      restoreFromHistory();
+      return;
+    }
+    if (runsData[trimmed] && trimmed !== currentRunName) {
+      restoreFromHistory();
+      return;
+    }
+    runsData[trimmed] = runsData[currentRunName];
+    delete runsData[currentRunName];
+    const idx = createdRuns.indexOf(currentRunName);
+    if (idx !== -1) {
+        createdRuns[idx] = trimmed;
+    }
+    currentRunName = trimmed;
+    selectedRunDisplay.innerHTML = trimmed + formatDateRange(runsData[trimmed]);
+    saveHistoryAfterAction();
+    updateRunPanelList();
+    showRunSection(trimmed);
+});
+
+/* Eliminar Corrida */
+deleteRunBtn.addEventListener('click', () => {
+    if (!currentRunName) return;
+    pushHistory();
+    delete runsData[currentRunName];
+    const idx = createdRuns.indexOf(currentRunName);
+    if (idx !== -1) {
+        createdRuns.splice(idx, 1);
+    }
+    currentRunName = '';
+    saveHistoryAfterAction();
+    selectedRunDisplay.innerHTML = 'No se ha seleccionado corrida';
+    runSection.style.display = 'none';
+    datesTableBody.innerHTML = '';
+    datesTable.style.display = 'none';
+    updateRunPanelList();
+});
+
+function formatDateRange(runObj) {
+    if (!runObj) return '';
+    if (!runObj.startDate && !runObj.endDate) return ' (Sin fecha definida)';
+    if (runObj.startDate && runObj.endDate) {
+        return ` (${runObj.startDate} a ${runObj.endDate})`;
+    }
+    return '';
+}
+
+/* ==============================
+   4) ESTADOS DE LA CORRIDA
+============================== */
+let manualState = null; 
 const datesTable = document.getElementById('datesTable');
 const datesTableBody = document.getElementById('datesTableBody');
 
 function showRunSection(runName) {
-    runSection.style.display = 'block';
-    const runInfo = runsData[runName];
-    if (!runInfo) return;
-    startDateInput.value = runInfo.startDate || '';
-    endDateInput.value = runInfo.endDate || '';
+  runSection.style.display = 'block';
+  const runInfo = runsData[runName];
+  if (!runInfo) return;
 
-    datesTableBody.innerHTML = '';
-    const recordDates = Object.keys(runInfo.records).sort();
-    if (recordDates.length > 0) {
-        datesTable.style.display = 'table';
-        recordDates.forEach(dateStr => addRowForDate(runName, dateStr));
-        highlightTodayIfInRange();
-    } else {
-        datesTable.style.display = 'none';
-    }
+  startDateInput.value = runInfo.startDate || '';
+  endDateInput.value = runInfo.endDate || '';
+
+  datesTableBody.innerHTML = '';
+  const recordDates = Object.keys(runInfo.records).sort();
+  if (recordDates.length > 0) {
+      datesTable.style.display = 'table';
+      recordDates.forEach(dateStr => addRowForDate(runName, dateStr));
+  } else {
+      datesTable.style.display = 'none';
+  }
+
+  updateStatusIndicator();
+  updateMainButtonArea();
 }
 
-// Generar rango de fechas
+/* Botón Generar Rango */
+const generateDatesBtn = document.getElementById('generateDatesBtn');
 generateDatesBtn.addEventListener('click', () => {
-    if (!currentRunName) return;
-    const runInfo = runsData[currentRunName];
-    if (!runInfo) return;
+  if (!currentRunName) return;
+  pushHistory();
 
-    const startVal = startDateInput.value;
-    const endVal = endDateInput.value;
-    if (!startVal || !endVal) return;
+  const runInfo = runsData[currentRunName];
+  if (!runInfo) {
+    restoreFromHistory();
+    return;
+  }
 
-    const start = parseDateYMD(startVal);
-    const end = parseDateYMD(endVal);
-    if (start > end) return;
+  const startVal = startDateInput.value;
+  const endVal = endDateInput.value;
+  if (!startVal || !endVal) {
+    restoreFromHistory();
+    return;
+  }
 
-    runInfo.startDate = startVal;
-    runInfo.endDate = endVal;
+  runInfo.startDate = startVal;
+  runInfo.endDate = endVal;
 
-    const newRange = getDatesInRange(start, end);
+  regenerateRangeAndTable(runInfo);
 
-    removeRowsOutside(currentRunName, newRange);
-    newRange.forEach(dateStr => {
-        if (!runInfo.records[dateStr]) {
-            runInfo.records[dateStr] = [];
-        }
-        if (!document.getElementById(`row-${currentRunName}-${dateStr}`)) {
-            addRowForDate(currentRunName, dateStr);
-        }
-    });
-    sortTableRowsAscending();
-    datesTable.style.display = 'table';
-    highlightTodayIfInRange();
-    updateRunSelectOptions();
-    runSelect.value = currentRunName;
+  /* Reevaluar estado */
+  const newState = evaluateDateBasedState();
+  manualState = newState || null;
+
+  saveHistoryAfterAction();
+  updateStatusIndicator();
+  updateMainButtonArea();
+  selectedRunDisplay.innerHTML = currentRunName + formatDateRange(runInfo);
 });
 
-/* Evitar offsets usando fecha pura (YYYY-MM-DD) => Date a medianoche local */
-function parseDateYMD(ymd) {
-    const [y,m,d] = ymd.split('-').map(n => parseInt(n, 10));
-    return new Date(y, m-1, d); 
-}
+function regenerateRangeAndTable(runInfo) {
+  if (!runInfo.startDate || !runInfo.endDate) return;
+  const start = parseDateYMD(runInfo.startDate);
+  const end = parseDateYMD(runInfo.endDate);
+  if (start > end) return;
 
-function getDatesInRange(start, end) {
-    let current = new Date(start.getTime()); 
-    const range = [];
-    while (current <= end) {
-        const yyyy = current.getFullYear();
-        const mm = String(current.getMonth() + 1).padStart(2,'0');
-        const dd = String(current.getDate()).padStart(2,'0');
-        range.push(`${yyyy}-${mm}-${dd}`);
-        current.setDate(current.getDate() + 1);
+  const newRange = getDatesInRange(start, end);
+  removeRowsOutside(currentRunName, newRange);
+  newRange.forEach(dateStr => {
+    if (!runInfo.records[dateStr]) {
+      runInfo.records[dateStr] = [];
     }
-    return range;
+    if (!document.getElementById(`row-${currentRunName}-${dateStr}`)) {
+      addRowForDate(currentRunName, dateStr);
+    }
+  });
+  sortTableRowsAscending();
+  datesTable.style.display = 'table';
+  highlightTodayIfInRange();
 }
 
-function removeRowsOutside(runName, newRange) {
-    const rows = [...datesTableBody.querySelectorAll('tr')];
-    rows.forEach(row => {
-        const splitted = row.id.split('-'); 
-        // row-runName-YYYY-MM-DD
-        const rowRun = splitted[1];
-        const datePart = splitted.slice(2).join('-');
-        if (rowRun === runName && !newRange.includes(datePart)) {
-            datesTableBody.removeChild(row);
-        }
+/* Estado Programada/Activa/Finalizada */
+function evaluateDateBasedState() {
+  if (!startDateInput.value || !endDateInput.value) return null;
+  const now = new Date();
+  const start = parseDateYMD(startDateInput.value);
+  const end = parseDateYMD(endDateInput.value);
+  if (now < start) return "Programada";
+  if (now > end) return "Finalizada";
+  return "Activo";
+}
+
+function updateStatusIndicator() {
+  const statusSpan = document.getElementById('statusIndicator');
+  statusSpan.innerHTML = '';
+  if (!manualState) return;
+
+  let circleClass = '';
+  if (manualState === "Activo") circleClass = 'blink-green';
+  else if (manualState === "Programada") circleClass = 'blink-yellow';
+  else if (manualState === "Finalizada") circleClass = 'blink-red';
+
+  statusSpan.innerHTML = `
+    <span class="glow-text" style="font-size:1.2rem;">${manualState}</span>
+    <span class="${circleClass}"></span>
+  `;
+}
+
+function updateMainButtonArea() {
+  const mainActionButtonArea = document.getElementById('mainActionButtonArea');
+  const twoButtonsArea = document.getElementById('twoButtonsArea');
+  twoButtonsArea.style.display = 'none';
+  mainActionButtonArea.innerHTML = '';
+
+  if (!currentRunName) return;
+  if (!startDateInput.value || !endDateInput.value) return;
+  if (!manualState) return;
+
+  if (manualState === "Programada") {
+    mainActionButtonArea.innerHTML = `<button id="iniciarBtn" class="button-green">Iniciar</button>`;
+    document.getElementById('iniciarBtn').addEventListener('click', () => {
+      pushHistory();
+      const runInfo = runsData[currentRunName];
+      if (!runInfo) {
+        restoreFromHistory();
+        return;
+      }
+      const now = new Date();
+      const startVal = parseDateYMD(runInfo.startDate);
+      if (now < startVal) {
+        // Ajustar la fecha de inicio a hoy
+        const todayStr = formatYMD(now);
+        runInfo.startDate = todayStr;
+        startDateInput.value = todayStr;
+      }
+      regenerateRangeAndTable(runInfo);
+      manualState = "Activo";
+      saveHistoryAfterAction();
+      updateStatusIndicator();
+      updateMainButtonArea();
+      selectedRunDisplay.innerHTML = currentRunName + formatDateRange(runInfo);
     });
+    return;
+  }
+
+  if (manualState === "Activo") {
+    mainActionButtonArea.innerHTML = `<button id="finalizarBtn" class="button-red">Finalizar</button>`;
+    document.getElementById('finalizarBtn').addEventListener('click', () => {
+      pushHistory();
+      manualState = "Finalizada";
+      saveHistoryAfterAction();
+      updateStatusIndicator();
+      mainActionButtonArea.innerHTML = '';
+      twoButtonsArea.style.display = 'block';
+
+      const reanudarBtn = document.getElementById('reanudarBtn');
+      const enviarBtn = document.getElementById('enviarBtn');
+
+      reanudarBtn.onclick = () => {
+        pushHistory();
+        const newState = evaluateDateBasedState();
+        if (!newState) {
+          restoreFromHistory();
+          return;
+        }
+        manualState = newState;
+        saveHistoryAfterAction();
+        twoButtonsArea.style.display = 'none';
+        updateStatusIndicator();
+        updateMainButtonArea();
+      };
+
+      enviarBtn.onclick = () => {
+        alert("Datos enviados");
+      };
+    });
+    return;
+  }
+  // Si está Finalizada => no hay botón
 }
 
+/* ======== Manejo de fechas en la tabla ======== */
+function parseDateYMD(ymd) {
+  const [y, m, d] = ymd.split('-').map(n => parseInt(n, 10));
+  return new Date(y, m - 1, d);
+}
+function formatYMD(dateObj) {
+  const yyyy = dateObj.getFullYear();
+  const mm = String(dateObj.getMonth() + 1).padStart(2, '0');
+  const dd = String(dateObj.getDate()).padStart(2, '0');
+  return `${yyyy}-${mm}-${dd}`;
+}
+function getDatesInRange(start, end) {
+  const range = [];
+  let current = new Date(start);
+  while (current <= end) {
+    range.push(formatYMD(current));
+    current.setDate(current.getDate() + 1);
+  }
+  return range;
+}
+function removeRowsOutside(runName, newRange) {
+  const rows = [...datesTableBody.querySelectorAll('tr')];
+  rows.forEach(row => {
+    const splitted = row.id.split('-');
+    const rowRun = splitted[1];
+    const datePart = splitted.slice(2).join('-');
+    if (rowRun === runName && !newRange.includes(datePart)) {
+      datesTableBody.removeChild(row);
+    }
+  });
+}
+function sortTableRowsAscending() {
+  const rowsArray = Array.from(datesTableBody.querySelectorAll('tr'));
+  rowsArray.sort((a, b) => {
+    const dateA = a.id.split('-').slice(2).join('-');
+    const dateB = b.id.split('-').slice(2).join('-');
+    return dateA.localeCompare(dateB);
+  });
+  rowsArray.forEach(row => datesTableBody.appendChild(row));
+}
+function highlightTodayIfInRange() {
+  const now = new Date();
+  const yyyy = now.getFullYear();
+  const mm = String(now.getMonth()+1).padStart(2, '0');
+  const dd = String(now.getDate()).padStart(2, '0');
+  const todayStr = `${yyyy}-${mm}-${dd}`;
+
+  const rows = datesTableBody.querySelectorAll('tr');
+  rows.forEach(row => {
+    if (row.id.endsWith(`-${todayStr}`)) {
+      row.style.backgroundColor = '#222';
+      row.style.outline = '2px solid #FFF';
+    } else {
+      row.style.backgroundColor = '';
+      row.style.outline = '';
+    }
+  });
+}
+
+/* ======== Render de cada fila en la tabla principal ======== */
 function addRowForDate(runName, dateStr) {
+  const runInfo = runsData[runName];
+  if (!runInfo) return;
+
+  const tr = document.createElement('tr');
+  tr.id = `row-${runName}-${dateStr}`;
+
+  /* Fecha */
+  const tdFecha = document.createElement('td');
+  tdFecha.style.padding = '8px';
+  tdFecha.style.border = 'none';
+  tdFecha.innerHTML = `<span class="glow-text">${dateStr}</span>`;
+  tr.appendChild(tdFecha);
+
+  /* Subir Archivo */
+  const tdSubir = document.createElement('td');
+  tdSubir.style.padding = '8px';
+  tdSubir.style.border = 'none';
+  tdSubir.style.textAlign = 'center';
+
+  const fileInput = document.createElement('input');
+  fileInput.type = 'file';
+  fileInput.accept = '.pdf,.xlsx,.xls,.csv,.doc,.docx,.png,.jpg,.jpeg';
+  fileInput.style.display = 'none';
+  fileInput.onchange = (e) => {
+    pushHistory();
+    handleDayFileUpload(e, runName, dateStr);
+    saveHistoryAfterAction();
+  };
+
+  const uploadBtn = document.createElement('button');
+  uploadBtn.textContent = 'Subir Nuevo Control de Parámetros';
+  uploadBtn.style.padding = '6px';
+  uploadBtn.style.background = '#111';
+  uploadBtn.style.color = '#fff';
+  uploadBtn.style.border = '1px solid #fff';
+  uploadBtn.style.cursor = 'pointer';
+  uploadBtn.onclick = () => fileInput.click();
+
+  tdSubir.appendChild(uploadBtn);
+  tdSubir.appendChild(fileInput);
+  tr.appendChild(tdSubir);
+
+  /* Último Archivo */
+  const tdUltimo = document.createElement('td');
+  tdUltimo.style.padding = '8px';
+  tdUltimo.style.border = 'none';
+  tdUltimo.style.textAlign = 'center';
+  updateLastFileCell(runName, dateStr, tdUltimo);
+  tr.appendChild(tdUltimo);
+
+  /* Historial */
+  const tdHist = document.createElement('td');
+  tdHist.style.padding = '8px';
+  tdHist.style.border = 'none';
+  tdHist.style.textAlign = 'center';
+
+  const histBtn = document.createElement('button');
+  histBtn.textContent = 'Ver Historial';
+  histBtn.style.padding = '6px';
+  histBtn.style.background = '#111';
+  histBtn.style.color = '#fff';
+  histBtn.style.border = '1px solid #fff';
+  histBtn.style.cursor = 'pointer';
+  histBtn.onclick = () => openHistoryModal(runName, dateStr);
+
+  tdHist.appendChild(histBtn);
+  tr.appendChild(tdHist);
+
+  datesTableBody.appendChild(tr);
+}
+
+/* Subida de archivo */
+function handleDayFileUpload(e, runName, dateStr) {
+  const file = e.target.files[0];
+  if (!file) return;
+  const now = new Date();
+  const dateTime = now.toLocaleString();
+  const reader = new FileReader();
+  reader.onload = function(evt) {
+    const fileDataUrl = evt.target.result;
     const runInfo = runsData[runName];
-    if (!runInfo) return;
+    if (!runInfo.records[dateStr]) {
+      runInfo.records[dateStr] = [];
+    }
+    runInfo.records[dateStr].push({
+      fileName: file.name,
+      fileData: fileDataUrl,
+      dateTime: dateTime
+    });
+    // Actualizar la celda del "Último Archivo"
+    const row = document.getElementById(`row-${runName}-${dateStr}`);
+    if (row) {
+      const tdUltimo = row.children[2];
+      updateLastFileCell(runName, dateStr, tdUltimo);
+    }
+  };
+  reader.readAsDataURL(file);
+}
 
-    const tr = document.createElement('tr');
-    tr.id = `row-${runName}-${dateStr}`;
+/* Muestra el último archivo en la celda */
+function updateLastFileCell(runName, dateStr, tdElement) {
+  const runInfo = runsData[runName];
+  if (!runInfo) return;
+  const files = runInfo.records[dateStr] || [];
+  if (files.length === 0) {
+    tdElement.innerHTML = '<span style="color:#bbb;">(ninguno)</span>';
+    return;
+  }
+  const last = files[files.length - 1];
+  tdElement.innerHTML = `
+    <a href="${last.fileData}" download="${last.fileName}" style="color:#fff; text-decoration:underline;">
+      ${last.fileName}
+    </a>
+    <br>
+    <small style="color:#ccc;">${last.dateTime}</small>
+  `;
+}
 
-    // FECHA
-    const tdFecha = document.createElement('td');
-    tdFecha.style.padding = '8px';
-    tdFecha.style.border = 'none';
-    tdFecha.innerHTML = `<span class="glow-text">${dateStr}</span>`;
-    tr.appendChild(tdFecha);
+/* ==========================
+   Modal de Historial
+========================== */
+const historyModalOverlay = document.getElementById('historyModalOverlay');
+const historyModal = document.getElementById('historyModal');
+const historyContent = document.getElementById('historyContent');
+const closeHistoryBtn = document.getElementById('closeHistoryBtn');
 
-    // SUBIR
-    const tdSubir = document.createElement('td');
-    tdSubir.style.padding = '8px';
-    tdSubir.style.border = 'none';
-    tdSubir.style.textAlign = 'center';
+closeHistoryBtn.addEventListener('click', () => {
+  historyModalOverlay.style.display = 'none';
+});
 
-    const fileInput = document.createElement('input');
-    fileInput.type = 'file';
-    fileInput.accept = '.pdf,.xlsx,.xls,.csv,.doc,.docx,.png,.jpg,.jpeg';
-    fileInput.style.display = 'none';
-    fileInput.onchange = (e) => handleDayFileUpload(e, runName, dateStr);
+function openHistoryModal(runName, dateStr) {
+  // Renderizar la lista de archivos subidos para esa fecha
+  const runInfo = runsData[runName];
+  if (!runInfo) return;
+  const uploads = runInfo.records[dateStr] || [];
 
-    const uploadBtn = document.createElement('button');
-    uploadBtn.textContent = 'Subir Nuevo Control de Parámetros';
-    uploadBtn.style.padding = '6px';
-    uploadBtn.style.background = '#111';
-    uploadBtn.style.color = '#fff';
-    uploadBtn.style.border = '1px solid #fff';
-    uploadBtn.style.cursor = 'pointer';
-    uploadBtn.onclick = () => fileInput.click();
-
-    tdSubir.appendChild(uploadBtn);
-    tdSubir.appendChild(fileInput);
-    tr.appendChild(tdSubir);
-
-    // ULTIMO ARCHIVO
-    const tdUltimo = document.createElement('td');
-    tdUltimo.style.padding = '8px';
-    tdUltimo.style.border = 'none';
-    tdUltimo.style.textAlign = 'center';
-
-    const existing = runInfo.records[dateStr] || [];
-    if (existing.length > 0) {
-        const last = existing[existing.length - 1];
-        tdUltimo.innerHTML = `
-            <a 
-                href="${last.fileData}" 
-                download="${last.fileName}"
-                style="color:#fff; text-decoration:underline;"
-            >
-                ${last.fileName}
+  let html = `
+    <h3>Historial de archivos - ${dateStr}<br><small>(Corrida: ${runName})</small></h3>
+    <ul style="list-style:none; padding-left:0;">
+  `;
+  if (uploads.length === 0) {
+    html += '<li>No hay archivos cargados todavía.</li>';
+  } else {
+    uploads.forEach((item, index) => {
+      html += `
+        <li style="margin-bottom:10px; background:#ddd; padding:5px; border-radius:3px;">
+          <div>
+            <strong>Archivo:</strong>
+            <a href="${item.fileData}" download="${item.fileName}" style="text-decoration:underline;">
+              ${item.fileName}
             </a>
             <br>
-            <small style="color:#ccc;">${last.dateTime}</small>
-        `;
-    } else {
-        tdUltimo.innerHTML = '<span style="color:#bbb;">(ninguno)</span>';
-    }
-    tr.appendChild(tdUltimo);
-
-    // HISTORIAL
-    const tdHist = document.createElement('td');
-    tdHist.style.padding = '8px';
-    tdHist.style.border = 'none';
-    tdHist.style.textAlign = 'center';
-
-    const histBtn = document.createElement('button');
-    histBtn.textContent = 'Ver Historial';
-    histBtn.style.padding = '6px';
-    histBtn.style.background = '#111';
-    histBtn.style.color = '#fff';
-    histBtn.style.border = '1px solid #fff';
-    histBtn.style.cursor = 'pointer';
-    histBtn.onclick = () => showHistory(runName, dateStr);
-
-    tdHist.appendChild(histBtn);
-    tr.appendChild(tdHist);
-
-    datesTableBody.appendChild(tr);
-}
-
-function handleDayFileUpload(e, runName, dateStr) {
-    const file = e.target.files[0];
-    if (!file) return;
-    const now = new Date();
-    const dateTime = now.toLocaleString();
-    const reader = new FileReader();
-    reader.onload = function(evt) {
-        const fileDataUrl = evt.target.result;
-        const runInfo = runsData[runName];
-        if (!runInfo.records[dateStr]) {
-            runInfo.records[dateStr] = [];
-        }
-        runInfo.records[dateStr].push({
-            fileName: file.name,
-            fileData: fileDataUrl,
-            dateTime: dateTime
-        });
-        updateLastFileCell(runName, dateStr);
-    };
-    reader.readAsDataURL(file);
-}
-
-function updateLastFileCell(runName, dateStr) {
-    const runInfo = runsData[runName];
-    if (!runInfo) return;
-    const tr = document.getElementById(`row-${runName}-${dateStr}`);
-    if (!tr) return;
-    const tdUltimo = tr.children[2];
-    const uploads = runInfo.records[dateStr];
-    if (!uploads || uploads.length === 0) {
-        tdUltimo.innerHTML = '<span style="color:#bbb;">(ninguno)</span>';
-        return;
-    }
-    const last = uploads[uploads.length - 1];
-    tdUltimo.innerHTML = `
-        <a 
-            href="${last.fileData}" 
-            download="${last.fileName}"
-            style="color:#fff; text-decoration:underline;"
-        >
-            ${last.fileName}
-        </a>
-        <br>
-        <small style="color:#ccc;">${last.dateTime}</small>
-    `;
-}
-
-function showHistory(runName, dateStr) {
-    const runInfo = runsData[runName];
-    if (!runInfo) return;
-    const uploads = runInfo.records[dateStr] || [];
-    if (uploads.length === 0) {
-        return;
-    }
-    let html = `<h3>Historial de archivos - ${dateStr} (Corrida: ${runName})</h3><ul>`;
-    uploads.forEach(item => {
-        html += `
-            <li>
-                <a
-                    href="${item.fileData}"
-                    download="${item.fileName}"
-                    style="color:#000; text-decoration:underline;"
-                >
-                    ${item.fileName}
-                </a>
-                <small> (${item.dateTime})</small>
-            </li>
-        `;
+            <small>${item.dateTime}</small>
+          </div>
+          <button 
+            style="margin-top:5px; background:#ff4444; color:#fff; border:none; padding:5px; cursor:pointer; border-radius:3px;"
+            onclick="deleteFile('${runName}','${dateStr}',${index})"
+          >
+            Borrar
+          </button>
+        </li>
+      `;
     });
-    html += '</ul>';
+  }
+  html += '</ul>';
 
-    const histWindow = window.open('', '', 'width=600,height=400');
-    histWindow.document.write(`
-        <html>
-        <head>
-            <title>Historial de ${dateStr}</title>
-        </head>
-        <body style="font-family:Arial; background:#f0f0f0; color:#000;">
-            ${html}
-        </body>
-        </html>
-    `);
-    histWindow.document.close();
-    histWindow.focus();
+  historyContent.innerHTML = html;
+  historyModalOverlay.style.display = 'block';
 }
 
-// Destaca en la tabla la fecha de hoy, si existe
-function highlightTodayIfInRange() {
-    const now = new Date();
-    const yyyy = now.getFullYear();
-    const mm = String(now.getMonth()+1).padStart(2,'0');
-    const dd = String(now.getDate()).padStart(2,'0');
-    const todayStr = `${yyyy}-${mm}-${dd}`;
+/* Borrar un archivo del historial de una fecha */
+function deleteFile(runName, dateStr, fileIndex) {
+  if (!runsData[runName] || !runsData[runName].records[dateStr]) return;
+  pushHistory(); // Cada borrado es un paso que se puede deshacer
 
-    const rows = datesTableBody.querySelectorAll('tr');
-    rows.forEach(row => {
-        if (row.id.endsWith(`-${todayStr}`)) {
-            row.style.backgroundColor = '#222';
-            row.style.outline = '2px solid #FFF';
-        } else {
-            row.style.backgroundColor = '';
-            row.style.outline = '';
-        }
-    });
-}
+  const arr = runsData[runName].records[dateStr];
+  if (fileIndex < 0 || fileIndex >= arr.length) {
+    restoreFromHistory();
+    return;
+  }
+  arr.splice(fileIndex, 1);
 
-// Ordena filas en orden ascendente por fecha
-function sortTableRowsAscending() {
-    const rowsArray = Array.from(datesTableBody.querySelectorAll('tr'));
-    rowsArray.sort((a, b) => {
-        // row-runName-YYYY-MM-DD
-        const dateA = a.id.split('-').slice(2).join('-');
-        const dateB = b.id.split('-').slice(2).join('-');
-        return dateA.localeCompare(dateB);
-    });
-    rowsArray.forEach(row => datesTableBody.appendChild(row));
+  // Actualizar "Último Archivo" en la tabla si cambió
+  const row = document.getElementById(`row-${runName}-${dateStr}`);
+  if (row) {
+    const tdUltimo = row.children[2];
+    updateLastFileCell(runName, dateStr, tdUltimo);
+  }
+
+  saveHistoryAfterAction();
+  // Volver a abrir el modal para reflejar cambios
+  openHistoryModal(runName, dateStr);
 }
 </script>
 {% endblock %}

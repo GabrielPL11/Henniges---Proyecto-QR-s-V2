@@ -16,22 +16,109 @@ Cortadora Max Müller
             Cortadora Max Müller
         </h2>
 
-        <!-- Título principal: ahora muestra "Cortadora Max Müller - L3" -->
+        <!-- Título principal: "Cortadora Max Müller - L3" -->
         <h3 class="line-heading glow-text" style="margin-bottom:30px;">Cortadora Max Müller - L3</h3>
 
-        <!-- Sección de imágenes (se mantienen 3 recuadros idénticos a lines.html) -->
+        <!-- Sección de recuadros (3) -->
         <div class="line-row">
-            <div class="line-box" style="text-align:center;">Imagen</div>
-            <div class="line-box" style="text-align:center;">Imagen</div>
-            <div class="line-box" style="text-align:center;">Imagen</div>
+
+            <!-- Recuadro 1: TPM -->
+            <div 
+                class="line-box" 
+                id="tpm-box"
+                style="
+                    text-align:center;
+                    position: relative;
+                    overflow: hidden;
+                    /* Borde blanco muy sutil y esquinas redondeadas */
+                    border: 1px solid #fff;
+                    border-radius: 8px;  
+                    background: url('{{ url_for('static', filename='TPM.png') }}') center center / cover no-repeat;
+                "
+            >
+                <video 
+                    id="tpm-video"
+                    src="{{ url_for('static', filename='TPM_V.mp4') }}"
+                    style="
+                        position:absolute;
+                        top:0;
+                        left:0;
+                        width:100%;
+                        height:100%;
+                        object-fit: cover;
+                        object-position: center;
+                        display:none;
+                    "
+                ></video>
+            </div>
+
+            <!-- Recuadro 2: Mantenimiento Preventivo (MP) -->
+            <div 
+                class="line-box" 
+                id="mp-box"
+                style="
+                    text-align:center;
+                    position: relative;
+                    overflow: hidden;
+                    /* Mismo borde y radio de esquina */
+                    border: 1px solid #fff;
+                    border-radius: 8px;  
+                    /* Para que coincida con el video, centramos la imagen igual que en los demás */
+                    background: url('{{ url_for('static', filename='MP.png') }}') center center / cover no-repeat;
+                "
+            >
+                <video 
+                    id="mp-video"
+                    src="{{ url_for('static', filename='MP_V.mp4') }}"
+                    style="
+                        position:absolute;
+                        top:0;
+                        left:0;
+                        width:100%;
+                        height:100%;
+                        object-fit: cover;
+                        object-position: center;
+                        display:none;
+                    "
+                ></video>
+            </div>
+
+            <!-- Recuadro 3: Instructivo de Trabajo (IT) -->
+            <div 
+                class="line-box"
+                id="it-box"
+                style="
+                    text-align:center;
+                    position: relative;
+                    overflow: hidden;
+                    border: 1px solid #fff;
+                    border-radius: 8px;
+                    background: url('{{ url_for('static', filename='IT.png') }}') center center / cover no-repeat;
+                "
+            >
+                <video 
+                    id="it-video"
+                    src="{{ url_for('static', filename='IT_V.mp4') }}"
+                    style="
+                        position:absolute;
+                        top:0;
+                        left:0;
+                        width:100%;
+                        height:100%;
+                        object-fit: cover;
+                        object-position: center;
+                        display:none;
+                    "
+                ></video>
+            </div>
         </div>
 
         <!-- Footer con 3 textos -->
         <div class="line-footer">
-            <!-- Se agrega el enlace de descarga en TPM -->
+            <!-- Enlace TPM -->
             <div class="footer-item glow-text">
                 <a 
-                    href="{{ url_for('static', filename='machines/tpm/TPM - Cortadora Max Müller - L3.pdf') }}" 
+                    href="{{ url_for('static', filename='TPM - Cortadora Max Müller - L3.pdf') }}" 
                     target="_blank"
                     style="color:inherit; text-decoration:none;"
                 >
@@ -41,14 +128,108 @@ Cortadora Max Müller
             <div class="footer-item glow-text">Mantenimiento preventivo</div>
             <div class="footer-item glow-text">Instructivo de trabajo</div>
         </div>
-
     </div>
 </div>
 
 <script>
+    // Al cargar la página, mantenemos la animación que ya existía
     window.addEventListener('load', function(){
         document.getElementById('machine-detail-wrapper').classList.add('fade-in-fast');
         document.getElementById('main-header-wrapper').style.display = 'block';
     });
+
+    /*
+        Lógica de videos con requestAnimationFrame:
+        - Mouseenter: avanzar el video (con loop si llega al final).
+        - Mouseleave: retroceder el video desde el punto actual hasta 0.
+          Si se vuelve a poner el mouse encima, se retoma el avance donde iba.
+    */
+
+    function setupHoverVideo(boxId, videoId) {
+        const box = document.getElementById(boxId);
+        const video = document.getElementById(videoId);
+
+        let reversing = false;         // Indica si está retrocediendo
+        let forwardRAF = null;         // RequestAnimationFrame para avanzar
+        let reverseRAF = null;         // RequestAnimationFrame para retroceder
+        const playbackRate = 1;        // Velocidad normal
+
+        // Reiniciamos a 0 si llega al final y seguimos en hover
+        video.addEventListener('ended', () => {
+            if (!reversing) {
+                video.currentTime = 0;
+            }
+        });
+
+        // Avance manual
+        function playForward() {
+            cancelAnimationFrame(reverseRAF);
+            reverseRAF = null;
+            reversing = false;
+
+            video.style.display = 'block'; // Mostramos el video
+
+            let lastTime = null;
+            function stepForward(timestamp) {
+                if (!lastTime) lastTime = timestamp;
+                const delta = (timestamp - lastTime) / 1000;
+                lastTime = timestamp;
+
+                video.currentTime += delta * playbackRate;
+
+                // Loop si supera duración
+                if (video.currentTime >= video.duration) {
+                    video.currentTime = 0;
+                }
+
+                if (!reversing) {
+                    forwardRAF = requestAnimationFrame(stepForward);
+                }
+            }
+            forwardRAF = requestAnimationFrame(stepForward);
+        }
+
+        // Retroceso manual
+        function playReverse() {
+            cancelAnimationFrame(forwardRAF);
+            forwardRAF = null;
+            reversing = true;
+
+            let lastTime = null;
+            function stepReverse(timestamp) {
+                if (!lastTime) lastTime = timestamp;
+                const delta = (timestamp - lastTime) / 1000;
+                lastTime = timestamp;
+
+                video.currentTime -= delta * playbackRate;
+
+                if (video.currentTime <= 0) {
+                    video.currentTime = 0;
+                    video.style.display = 'none';
+                    return;
+                }
+
+                if (reversing) {
+                    reverseRAF = requestAnimationFrame(stepReverse);
+                }
+            }
+            reverseRAF = requestAnimationFrame(stepReverse);
+        }
+
+        // Eventos
+        box.addEventListener('mouseenter', () => {
+            if (reversing) reversing = false;
+            playForward();
+        });
+
+        box.addEventListener('mouseleave', () => {
+            playReverse();
+        });
+    }
+
+    // Inicializamos la lógica para cada recuadro
+    setupHoverVideo('tpm-box', 'tpm-video');
+    setupHoverVideo('mp-box', 'mp-video');
+    setupHoverVideo('it-box', 'it-video');
 </script>
 {% endblock %}
